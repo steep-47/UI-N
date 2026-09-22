@@ -134,7 +134,7 @@ body.ntu-enabled #chat .mes_text p:empty {
 
 body.ntu-enabled #chat .ntu-meta {
     min-height: 40px;
-    margin: 0 72px 12px 0;
+    margin: 0 0 12px;
     display: flex;
     align-items: center;
     flex-wrap: wrap;
@@ -159,6 +159,10 @@ body.ntu-enabled #chat .ntu-actions {
     flex: 0 0 auto;
 }
 
+body.ntu-enabled #chat .ntu-actions .mes_buttons {
+    gap: 4px;
+}
+
 body.ntu-enabled #chat .ntu-meta-item:first-of-type {
     color: var(--ntu-accent);
 }
@@ -173,7 +177,7 @@ body.ntu-enabled #chat .mes_buttons {
     opacity: 1 !important;
     visibility: visible !important;
     filter: none !important;
-    color: var(--ntu-muted) !important;
+    color: var(--ntu-text) !important;
     z-index: 2;
 }
 
@@ -190,7 +194,9 @@ body.ntu-enabled #chat .mes_edit_buttons > * {
     display: inline-grid !important;
     place-items: center;
     border-radius: 10px;
-    color: var(--ntu-muted) !important;
+    color: var(--ntu-text) !important;
+    background: color-mix(in srgb, var(--ntu-panel) 72%, transparent) !important;
+    opacity: .92 !important;
     text-shadow: none !important;
 }
 
@@ -244,6 +250,23 @@ body.ntu-enabled #send_textarea::placeholder {
     color: var(--ntu-muted) !important;
 }
 
+body.ntu-enabled #send_form .menu_button,
+body.ntu-enabled #send_form .interactable,
+body.ntu-enabled #send_form #send_but,
+body.ntu-enabled #send_form [class*="fa-"] {
+    color: var(--ntu-text) !important;
+    opacity: .9 !important;
+    filter: none !important;
+    text-shadow: none !important;
+}
+
+body.ntu-enabled #send_form .menu_button:hover,
+body.ntu-enabled #send_form .interactable:hover,
+body.ntu-enabled #send_form #send_but:hover {
+    color: var(--ntu-strong) !important;
+    opacity: 1 !important;
+}
+
 body.ntu-enabled #top-settings-holder,
 body.ntu-enabled #top-bar {
     background-color: var(--ntu-bg) !important;
@@ -277,7 +300,8 @@ body.ntu-enabled .drawer-icon {
 }
 
 #ntu_quick_toggle.ntu-active {
-    color: var(--SmartThemeQuoteColor) !important;
+    color: var(--ntu-accent) !important;
+    opacity: 1 !important;
 }
 
 .ntu-settings-content {
@@ -323,7 +347,6 @@ body.ntu-enabled .drawer-icon {
     }
 
     body.ntu-enabled #chat .ntu-meta {
-        margin-right: 66px;
         font-size: 12px;
         gap: 4px 7px;
     }
