@@ -216,6 +216,8 @@ body.ntu-enabled #chat .mes_edit_buttons > * {
     border-radius: 10px;
     color: var(--ntu-text) !important;
     background: color-mix(in srgb, var(--ntu-panel) 72%, transparent) !important;
+    border: 1px solid var(--ntu-border) !important;
+    box-shadow: none !important;
     opacity: .92 !important;
     text-shadow: none !important;
 }
@@ -472,13 +474,33 @@ html body.ntu-enabled .panel {
 }
 
 html body.ntu-enabled .inline-drawer-header,
+html body.ntu-enabled .inline-drawer-toggle,
 html body.ntu-enabled .drawer-header,
 html body.ntu-enabled .panel-heading,
 html body.ntu-enabled .popup-header {
     color: var(--ntu-strong) !important;
     background-color: var(--ntu-panel) !important;
     background-image: none !important;
+    border-color: var(--ntu-border) !important;
+    box-shadow: none !important;
     text-shadow: none !important;
+}
+
+html body.ntu-enabled #completion_prompt_manager .inline-drawer-toggle,
+html body.ntu-enabled #completion_prompt_manager .inline-drawer-header,
+html body.ntu-enabled #completion_prompt_manager .completion_prompt_manager_header {
+    background: var(--ntu-panel) !important;
+    color: var(--ntu-strong) !important;
+    border-color: var(--ntu-border) !important;
+    box-shadow: none !important;
+    filter: none !important;
+}
+
+html body.ntu-enabled #chat .ntu-actions .mes_buttons,
+html body.ntu-enabled #chat .ntu-actions .mes_button {
+    background-image: none !important;
+    box-shadow: none !important;
+    filter: none !important;
 }
 
 html body.ntu-enabled h1,
