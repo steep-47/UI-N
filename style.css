@@ -396,6 +396,17 @@ body.ntu-enabled .drawer-icon {
 /* 完整界面主题：聊天之外的酒馆区域统一使用 UI-N 日间/夜间色板。 */
 html body.ntu-enabled {
     color-scheme: dark;
+    --SmartThemeBodyColor: var(--ntu-strong);
+    --SmartThemeEmColor: var(--ntu-muted);
+    --SmartThemeUnderlineColor: var(--ntu-accent);
+    --SmartThemeQuoteColor: var(--ntu-accent);
+    --SmartThemeBlurTintColor: var(--ntu-bg);
+    --SmartThemeChatTintColor: var(--ntu-bg);
+    --SmartThemeUserMesBlurTintColor: var(--ntu-panel);
+    --SmartThemeBotMesBlurTintColor: var(--ntu-bg);
+    --SmartThemeBlurStrength: 0px;
+    --SmartThemeShadowColor: transparent;
+    --SmartThemeBorderColor: var(--ntu-border);
     background-color: var(--ntu-bg) !important;
     color: var(--ntu-text) !important;
 }
@@ -471,7 +482,25 @@ html body.ntu-enabled h4,
 html body.ntu-enabled label,
 html body.ntu-enabled legend {
     color: var(--ntu-strong) !important;
+    background-color: var(--ntu-panel) !important;
+    background-image: none !important;
     text-shadow: none !important;
+}
+
+html body.ntu-enabled #bg_menu_content,
+html body.ntu-enabled #backgrounds-content,
+html body.ntu-enabled #backgrounds_menu,
+html body.ntu-enabled .backgrounds-content,
+html body.ntu-enabled .backgrounds_menu {
+    background-color: var(--ntu-bg) !important;
+    background-image: none !important;
+    color: var(--ntu-text) !important;
+}
+
+html body.ntu-enabled .bg_example,
+html body.ntu-enabled .background_select {
+    border-color: var(--ntu-border) !important;
+    box-shadow: none !important;
 }
 
 html body.ntu-enabled input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]),
@@ -550,6 +579,20 @@ html body.ntu-enabled .separator,
 html body.ntu-enabled .divider {
     border-color: var(--ntu-border) !important;
     background-color: var(--ntu-border) !important;
+}
+
+html body.ntu-enabled *,
+html body.ntu-enabled *::before,
+html body.ntu-enabled *::after {
+    text-shadow: none !important;
+    -webkit-text-stroke-width: 0 !important;
+}
+
+html body.ntu-enabled :disabled,
+html body.ntu-enabled [disabled],
+html body.ntu-enabled .disabled {
+    color: var(--ntu-muted) !important;
+    opacity: .58 !important;
 }
 
 html body.ntu-enabled .drawer-icon,
