@@ -1,5 +1,6 @@
 const MODULE_NAME = 'ui_n';
 const ROOT_CLASS = 'ntu-enabled';
+const VERSION = '0.3.5';
 
 const defaults = {
     enabled: true,
@@ -306,7 +307,7 @@ function init() {
             .filter(Boolean)
             .forEach((event) => ctx.eventSource.on(event, () => setTimeout(() => refreshMessages(), 0)));
     }
-    console.info('[UI-N] v0.3.4 loaded');
+    console.info(`[UI-N] v${VERSION} loaded`);
 }
 
 if (document.readyState === 'loading') {
