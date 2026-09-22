@@ -206,6 +206,21 @@ body.ntu-enabled #chat .mes_edit_buttons > *:hover {
     background: var(--ntu-panel) !important;
 }
 
+body.ntu-enabled #chat .swipes-counter,
+body.ntu-enabled #chat .swipe_left,
+body.ntu-enabled #chat .swipe_right {
+    color: var(--ntu-text) !important;
+    opacity: .9 !important;
+    filter: none !important;
+    text-shadow: none !important;
+}
+
+body.ntu-enabled #chat .swipe_left,
+body.ntu-enabled #chat .swipe_right {
+    background: color-mix(in srgb, var(--ntu-panel) 72%, transparent) !important;
+    border-radius: 10px;
+}
+
 body.ntu-enabled.ntu-compact-user #chat .mes[is_user="true"] {
     margin-top: 10px !important;
     padding-bottom: 14px !important;
