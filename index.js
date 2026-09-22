@@ -296,7 +296,7 @@ function init() {
             .filter(Boolean)
             .forEach((event) => ctx.eventSource.on(event, () => setTimeout(() => refreshMessages(), 0)));
     }
-    console.info('[UI-N] v0.1.2 loaded');
+    console.info('[UI-N] v0.1.3 loaded');
 }
 
 if (document.readyState === 'loading') {
