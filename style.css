@@ -4,42 +4,58 @@
     --ntu-side-padding: 24px;
     --ntu-bg: #202020;
     --ntu-panel: #292929;
+    --ntu-elevated: #303030;
+    --ntu-input: #252525;
     --ntu-text: #b9b9b9;
     --ntu-strong: #d6d6d6;
     --ntu-muted: #777;
     --ntu-faint: #4d4d4d;
     --ntu-accent: #aeb8ad;
+    --ntu-border: #3d3d3d;
+    --ntu-shadow: rgba(0, 0, 0, .28);
 }
 
 body[data-ntu-theme="light"] {
     --ntu-bg: #f4f1e9;
     --ntu-panel: #ebe6dc;
+    --ntu-elevated: #fffdfa;
+    --ntu-input: #f0ece4;
     --ntu-text: #4c4a46;
     --ntu-strong: #292826;
     --ntu-muted: #89857d;
     --ntu-faint: #cbc5b9;
     --ntu-accent: #667166;
+    --ntu-border: #d5cec1;
+    --ntu-shadow: rgba(70, 62, 50, .13);
 }
 
 body[data-ntu-theme="dark"] {
     --ntu-bg: #202020;
     --ntu-panel: #292929;
+    --ntu-elevated: #303030;
+    --ntu-input: #252525;
     --ntu-text: #b9b9b9;
     --ntu-strong: #d6d6d6;
     --ntu-muted: #777;
     --ntu-faint: #4d4d4d;
     --ntu-accent: #aeb8ad;
+    --ntu-border: #3d3d3d;
+    --ntu-shadow: rgba(0, 0, 0, .28);
 }
 
 @media (prefers-color-scheme: light) {
     body[data-ntu-theme="auto"] {
         --ntu-bg: #f4f1e9;
         --ntu-panel: #ebe6dc;
+        --ntu-elevated: #fffdfa;
+        --ntu-input: #f0ece4;
         --ntu-text: #4c4a46;
         --ntu-strong: #292826;
         --ntu-muted: #89857d;
         --ntu-faint: #cbc5b9;
         --ntu-accent: #667166;
+        --ntu-border: #d5cec1;
+        --ntu-shadow: rgba(70, 62, 50, .13);
     }
 }
 
@@ -47,11 +63,15 @@ body[data-ntu-theme="dark"] {
     body[data-ntu-theme="auto"] {
         --ntu-bg: #202020;
         --ntu-panel: #292929;
+        --ntu-elevated: #303030;
+        --ntu-input: #252525;
         --ntu-text: #b9b9b9;
         --ntu-strong: #d6d6d6;
         --ntu-muted: #777;
         --ntu-faint: #4d4d4d;
         --ntu-accent: #aeb8ad;
+        --ntu-border: #3d3d3d;
+        --ntu-shadow: rgba(0, 0, 0, .28);
     }
 }
 
@@ -371,6 +391,199 @@ body.ntu-enabled .drawer-icon {
         min-width: 32px;
         min-height: 32px;
     }
+}
+
+/* 完整界面主题：聊天之外的酒馆区域统一使用 UI-N 日间/夜间色板。 */
+html body.ntu-enabled {
+    color-scheme: dark;
+    background-color: var(--ntu-bg) !important;
+    color: var(--ntu-text) !important;
+}
+
+html body.ntu-enabled[data-ntu-theme="light"] {
+    color-scheme: light;
+}
+
+@media (prefers-color-scheme: light) {
+    html body.ntu-enabled[data-ntu-theme="auto"] {
+        color-scheme: light;
+    }
+}
+
+html body.ntu-enabled #top-settings-holder,
+html body.ntu-enabled #top-bar,
+html body.ntu-enabled #form_sheld,
+html body.ntu-enabled #left-nav-panel,
+html body.ntu-enabled #right-nav-panel,
+html body.ntu-enabled #world_popup,
+html body.ntu-enabled #character_popup,
+html body.ntu-enabled #dialogue_popup,
+html body.ntu-enabled #options,
+html body.ntu-enabled .drawer-content,
+html body.ntu-enabled .inline-drawer-content,
+html body.ntu-enabled .popup-content,
+html body.ntu-enabled .popup-body,
+html body.ntu-enabled dialog {
+    background-color: var(--ntu-bg) !important;
+    background-image: none !important;
+    color: var(--ntu-text) !important;
+    border-color: var(--ntu-border) !important;
+    text-shadow: none !important;
+}
+
+html body.ntu-enabled #left-nav-panel,
+html body.ntu-enabled #right-nav-panel,
+html body.ntu-enabled #world_popup,
+html body.ntu-enabled #character_popup,
+html body.ntu-enabled #dialogue_popup,
+html body.ntu-enabled .popup-content,
+html body.ntu-enabled dialog {
+    box-shadow: 0 14px 40px var(--ntu-shadow) !important;
+}
+
+html body.ntu-enabled .extension_container,
+html body.ntu-enabled .inline-drawer,
+html body.ntu-enabled .list-group-item,
+html body.ntu-enabled .character_select,
+html body.ntu-enabled .group_select,
+html body.ntu-enabled .world_entry,
+html body.ntu-enabled .WIEntry,
+html body.ntu-enabled .preset_select,
+html body.ntu-enabled .drawer-content > section,
+html body.ntu-enabled fieldset,
+html body.ntu-enabled .panel {
+    background-color: var(--ntu-panel) !important;
+    background-image: none !important;
+    color: var(--ntu-text) !important;
+    border-color: var(--ntu-border) !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+}
+
+html body.ntu-enabled .inline-drawer-header,
+html body.ntu-enabled .drawer-header,
+html body.ntu-enabled .panel-heading,
+html body.ntu-enabled .popup-header,
+html body.ntu-enabled h1,
+html body.ntu-enabled h2,
+html body.ntu-enabled h3,
+html body.ntu-enabled h4,
+html body.ntu-enabled label,
+html body.ntu-enabled legend {
+    color: var(--ntu-strong) !important;
+    text-shadow: none !important;
+}
+
+html body.ntu-enabled input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]),
+html body.ntu-enabled textarea:not(#send_textarea),
+html body.ntu-enabled select {
+    background: var(--ntu-input) !important;
+    color: var(--ntu-strong) !important;
+    border: 1px solid var(--ntu-border) !important;
+    border-radius: 9px !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+}
+
+html body.ntu-enabled input::placeholder,
+html body.ntu-enabled textarea::placeholder {
+    color: var(--ntu-muted) !important;
+    opacity: 1 !important;
+}
+
+html body.ntu-enabled input[type="checkbox"],
+html body.ntu-enabled input[type="radio"],
+html body.ntu-enabled input[type="range"] {
+    accent-color: var(--ntu-accent);
+}
+
+html body.ntu-enabled button,
+html body.ntu-enabled .menu_button,
+html body.ntu-enabled .custom_button,
+html body.ntu-enabled .paginationjs-page,
+html body.ntu-enabled .paginationjs-prev,
+html body.ntu-enabled .paginationjs-next {
+    color: var(--ntu-text) !important;
+    border-color: var(--ntu-border) !important;
+    text-shadow: none !important;
+    filter: none !important;
+}
+
+html body.ntu-enabled .drawer-content .menu_button,
+html body.ntu-enabled .popup-content .menu_button,
+html body.ntu-enabled .custom_button {
+    background-color: var(--ntu-panel) !important;
+}
+
+html body.ntu-enabled button:hover,
+html body.ntu-enabled .menu_button:hover,
+html body.ntu-enabled .custom_button:hover,
+html body.ntu-enabled .list-group-item:hover,
+html body.ntu-enabled .character_select:hover,
+html body.ntu-enabled .group_select:hover {
+    background-color: var(--ntu-elevated) !important;
+    color: var(--ntu-strong) !important;
+}
+
+html body.ntu-enabled a,
+html body.ntu-enabled .link,
+html body.ntu-enabled .active,
+html body.ntu-enabled .selected {
+    color: var(--ntu-accent) !important;
+}
+
+html body.ntu-enabled table,
+html body.ntu-enabled th,
+html body.ntu-enabled td {
+    background-color: transparent !important;
+    color: var(--ntu-text) !important;
+    border-color: var(--ntu-border) !important;
+}
+
+html body.ntu-enabled th {
+    background-color: var(--ntu-panel) !important;
+    color: var(--ntu-strong) !important;
+}
+
+html body.ntu-enabled hr,
+html body.ntu-enabled .separator,
+html body.ntu-enabled .divider {
+    border-color: var(--ntu-border) !important;
+    background-color: var(--ntu-border) !important;
+}
+
+html body.ntu-enabled .drawer-icon,
+html body.ntu-enabled #top-settings-holder [class*="fa-"],
+html body.ntu-enabled #top-bar [class*="fa-"] {
+    color: var(--ntu-muted) !important;
+    opacity: .9 !important;
+    filter: none !important;
+    text-shadow: none !important;
+}
+
+html body.ntu-enabled .drawer-icon:hover,
+html body.ntu-enabled #top-settings-holder [class*="fa-"]:hover,
+html body.ntu-enabled #top-bar [class*="fa-"]:hover {
+    color: var(--ntu-strong) !important;
+    opacity: 1 !important;
+}
+
+html body.ntu-enabled * {
+    scrollbar-color: var(--ntu-muted) var(--ntu-bg);
+}
+
+html body.ntu-enabled *::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+}
+
+html body.ntu-enabled *::-webkit-scrollbar-track {
+    background: var(--ntu-bg);
+}
+
+html body.ntu-enabled *::-webkit-scrollbar-thumb {
+    background: var(--ntu-muted);
+    border-radius: 999px;
 }
 
 /*
