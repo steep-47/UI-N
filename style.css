@@ -86,10 +86,21 @@ body.ntu-enabled #chat .mes {
 }
 
 body.ntu-enabled #chat .mesAvatarWrapper,
-body.ntu-enabled #chat .ch_name,
 body.ntu-enabled #chat .mesIDDisplay,
 body.ntu-enabled #chat .mes_timer,
-body.ntu-enabled #chat .tokenCounterDisplay {
+body.ntu-enabled #chat .tokenCounterDisplay,
+body.ntu-enabled #chat [data-ntu-cache-source="true"] {
+    display: none !important;
+}
+
+body.ntu-enabled #chat .ch_name {
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+}
+
+body.ntu-enabled #chat .ch_name > :not(.mes_buttons):not(.mes_edit_buttons) {
     display: none !important;
 }
 
@@ -133,6 +144,21 @@ body.ntu-enabled #chat .ntu-meta {
     font-variant-numeric: tabular-nums;
 }
 
+body.ntu-enabled #chat .ntu-meta-stats {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 5px 9px;
+}
+
+body.ntu-enabled #chat .ntu-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    flex: 0 0 auto;
+}
+
 body.ntu-enabled #chat .ntu-meta-item:first-of-type {
     color: var(--ntu-accent);
 }
@@ -141,14 +167,19 @@ body.ntu-enabled #chat .ntu-meta-dot {
     color: var(--ntu-faint);
 }
 
-body.ntu-enabled #chat .mes_buttons,
-body.ntu-enabled #chat .mes_edit_buttons {
-    top: 12px !important;
-    right: var(--ntu-side-padding) !important;
+body.ntu-enabled #chat .mes_buttons {
+    position: static !important;
+    display: flex !important;
     opacity: 1 !important;
     visibility: visible !important;
     filter: none !important;
     color: var(--ntu-muted) !important;
+    z-index: 2;
+}
+
+body.ntu-enabled #chat .mes_edit_buttons {
+    color: var(--ntu-muted) !important;
+    filter: none !important;
     z-index: 2;
 }
 
@@ -215,8 +246,19 @@ body.ntu-enabled #send_textarea::placeholder {
 
 body.ntu-enabled #top-settings-holder,
 body.ntu-enabled #top-bar {
+    background-color: var(--ntu-bg) !important;
     border: 0 !important;
     box-shadow: none !important;
+}
+
+body.ntu-enabled #top-settings-holder .drawer,
+body.ntu-enabled #top-settings-holder .drawer-toggle,
+body.ntu-enabled #top-settings-holder .drawer-icon,
+body.ntu-enabled #top-bar .drawer,
+body.ntu-enabled #top-bar .drawer-toggle,
+body.ntu-enabled #top-bar .drawer-icon {
+    background-color: var(--ntu-bg) !important;
+    color: var(--ntu-muted) !important;
 }
 
 body.ntu-enabled .drawer-icon {
