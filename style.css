@@ -373,6 +373,126 @@ body.ntu-enabled .drawer-icon {
     }
 }
 
+/*
+ * UI-N 独立阅读层：开启时不继承第三方主题的消息与输入栏布局。
+ * 这里刻意使用稳定的酒馆节点和较高优先级，而不是针对某款主题写补丁。
+ */
+html body.ntu-enabled #sheld #chat {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    max-width: none !important;
+    background: var(--ntu-bg) !important;
+}
+
+html body.ntu-enabled #sheld #chat .mes {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    max-width: 820px !important;
+    min-width: 0 !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    display: block !important;
+    grid-template-columns: none !important;
+    background: transparent !important;
+}
+
+html body.ntu-enabled #sheld #chat .mes > .mesAvatarWrapper,
+html body.ntu-enabled #sheld #chat .mes .mesAvatarWrapper,
+html body.ntu-enabled #sheld #chat .mes .ch_name {
+    display: none !important;
+}
+
+html body.ntu-enabled #sheld #chat .mes .mes_block {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: block !important;
+    transform: none !important;
+}
+
+html body.ntu-enabled #sheld #chat .mes .ntu-meta {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+}
+
+html body.ntu-enabled #sheld #chat .mes .mes_text {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    color: var(--ntu-text) !important;
+    font-family: "Noto Serif SC", "Source Han Serif SC", "Songti SC", "STSong", serif !important;
+    font-size: var(--ntu-font-size) !important;
+    font-weight: 400 !important;
+    line-height: var(--ntu-line-height) !important;
+    letter-spacing: .025em !important;
+    text-align: left !important;
+    writing-mode: horizontal-tb !important;
+}
+
+html body.ntu-enabled #form_sheld #send_form {
+    box-sizing: border-box !important;
+    width: min(820px, calc(100% - 12px)) !important;
+    min-width: 0 !important;
+    min-height: 54px !important;
+    height: auto !important;
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    gap: 4px !important;
+}
+
+html body.ntu-enabled #form_sheld #send_form #leftSendForm,
+html body.ntu-enabled #form_sheld #send_form #rightSendForm {
+    width: auto !important;
+    min-width: 0 !important;
+    height: auto !important;
+    display: flex !important;
+    flex: 0 0 auto !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    gap: 2px !important;
+}
+
+html body.ntu-enabled #form_sheld #send_form #send_textarea {
+    width: auto !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 38px !important;
+    max-height: 40vh !important;
+    margin: 0 !important;
+    padding: 7px 5px !important;
+    display: block !important;
+    flex: 1 1 auto !important;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif !important;
+    font-size: 16px !important;
+    line-height: 1.45 !important;
+    resize: none !important;
+}
+
+html body.ntu-enabled #form_sheld #send_form .menu_button,
+html body.ntu-enabled #form_sheld #send_form #send_but {
+    box-sizing: border-box !important;
+    width: 38px !important;
+    min-width: 38px !important;
+    height: 38px !important;
+    min-height: 38px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: inline-grid !important;
+    place-items: center !important;
+    flex: 0 0 38px !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
     body.ntu-enabled * {
         transition: none !important;
