@@ -474,7 +474,13 @@ html body.ntu-enabled .panel {
 html body.ntu-enabled .inline-drawer-header,
 html body.ntu-enabled .drawer-header,
 html body.ntu-enabled .panel-heading,
-html body.ntu-enabled .popup-header,
+html body.ntu-enabled .popup-header {
+    color: var(--ntu-strong) !important;
+    background-color: var(--ntu-panel) !important;
+    background-image: none !important;
+    text-shadow: none !important;
+}
+
 html body.ntu-enabled h1,
 html body.ntu-enabled h2,
 html body.ntu-enabled h3,
@@ -482,9 +488,46 @@ html body.ntu-enabled h4,
 html body.ntu-enabled label,
 html body.ntu-enabled legend {
     color: var(--ntu-strong) !important;
+    text-shadow: none !important;
+}
+
+html body.ntu-enabled #completion_prompt_manager,
+html body.ntu-enabled #completion_prompt_manager_list {
+    background-color: var(--ntu-bg) !important;
+    color: var(--ntu-text) !important;
+}
+
+html body.ntu-enabled #completion_prompt_manager .completion_prompt_manager_header,
+html body.ntu-enabled #completion_prompt_manager .completion_prompt_manager_list_head {
+    background-color: var(--ntu-panel) !important;
+    color: var(--ntu-strong) !important;
+}
+
+html body.ntu-enabled #completion_prompt_manager #completion_prompt_manager_list li.completion_prompt_manager_prompt {
+    background-color: var(--ntu-elevated) !important;
+    color: var(--ntu-strong) !important;
+    border-color: var(--ntu-border) !important;
+}
+
+html body.ntu-enabled #completion_prompt_manager #completion_prompt_manager_list li.completion_prompt_manager_prompt_disabled {
+    background-color: var(--ntu-input) !important;
+    color: var(--ntu-muted) !important;
+    opacity: .72 !important;
+}
+
+html body.ntu-enabled #completion_prompt_manager .completion_prompt_manager_prompt_name,
+html body.ntu-enabled #completion_prompt_manager .prompt-manager-inspect-action,
+html body.ntu-enabled #completion_prompt_manager .prompt_manager_prompt_tokens {
+    color: inherit !important;
+}
+
+html body.ntu-enabled #chat .mes_reasoning_summary,
+html body.ntu-enabled #chat .mes_reasoning_header {
     background-color: var(--ntu-panel) !important;
     background-image: none !important;
-    text-shadow: none !important;
+    color: var(--ntu-strong) !important;
+    border-color: var(--ntu-border) !important;
+    box-shadow: none !important;
 }
 
 html body.ntu-enabled #bg_menu_content,
