@@ -11,6 +11,7 @@ const defaults = {
 };
 
 let observer;
+let initialized = false;
 
 function context() {
     return globalThis.SillyTavern?.getContext?.();
@@ -238,6 +239,13 @@ function update(key, value) {
 }
 
 function init() {
+    if (initialized) {
+        applyAppearance();
+        observeChat();
+        refreshMessages();
+        return;
+    }
+    initialized = true;
     settings();
     addSettingsPanel();
     addQuickToggle();
@@ -251,7 +259,7 @@ function init() {
             .filter(Boolean)
             .forEach((event) => ctx.eventSource.on(event, () => setTimeout(() => refreshMessages(), 0)));
     }
-    console.info('[UI-N] v0.1.0 loaded');
+    console.info('[UI-N] v0.1.1 loaded');
 }
 
 if (document.readyState === 'loading') {
