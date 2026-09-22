@@ -43,6 +43,12 @@ function applyAppearance() {
     toggle?.classList.toggle('ntu-active', Boolean(value.enabled));
     toggle?.setAttribute('title', value.enabled ? '退出沉浸阅读' : '进入沉浸阅读');
     document.getElementById('ntu_enabled')?.toggleAttribute('checked', Boolean(value.enabled));
+
+    if (value.enabled) {
+        setTimeout(() => refreshMessages(), 0);
+    } else {
+        restoreMessages();
+    }
 }
 
 function textOf(element) {
@@ -51,12 +57,20 @@ function textOf(element) {
 
 function findCacheText(message) {
     const explicit = message.querySelector('[data-cache-hit], .memo-cache-hit, .cache-hit, [class*="cache_hit"], [class*="cache-hit"]');
-    if (explicit && /缓存|cache/i.test(textOf(explicit))) return textOf(explicit);
+    if (explicit && /缓存|cache/i.test(textOf(explicit))) {
+        explicit.dataset.ntuCacheSource = 'true';
+        return textOf(explicit);
+    }
 
-    const candidates = message.querySelectorAll('.ch_name > *, .mes_block > *');
+    const candidates = message.querySelectorAll('.ch_name *, .mes_block *');
     for (const item of candidates) {
+        if (item.matches('.mes_text, .mes_text *, .ntu-meta, .ntu-meta *, .mes_buttons, .mes_buttons *, .mes_edit_buttons, .mes_edit_buttons *')) continue;
+        if (item.children.length > 0) continue;
         const text = textOf(item);
-        if (/^(缓存命中|缓存|cache hit)\s*[:：]?\s*\d+(?:\.\d+)?%$/i.test(text)) return text;
+        if (/^(缓存命中|缓存|cache hit)\s*[:：]?\s*\d+(?:\.\d+)?%$/i.test(text)) {
+            item.dataset.ntuCacheSource = 'true';
+            return text;
+        }
     }
     return '';
 }
@@ -82,7 +96,19 @@ function upsertMeta(message) {
         meta = document.createElement('div');
         meta.className = 'ntu-meta';
         meta.setAttribute('aria-label', '本条回复数据');
+        meta.innerHTML = '<div class="ntu-meta-stats"></div><div class="ntu-actions"></div>';
         message.querySelector(':scope > .mes_block')?.prepend(meta);
+    }
+
+    const stats = meta.querySelector('.ntu-meta-stats');
+    const actions = meta.querySelector('.ntu-actions');
+    const buttons = message.querySelector('.mes_buttons:not(.ntu-actions .mes_buttons)');
+    if (buttons && actions) {
+        const anchor = document.createElement('span');
+        anchor.className = 'ntu-actions-anchor';
+        anchor.hidden = true;
+        buttons.before(anchor);
+        actions.append(buttons);
     }
 
     const values = [
@@ -93,9 +119,9 @@ function upsertMeta(message) {
     ].filter(Boolean);
 
     const signature = values.join('|');
-    if (meta.dataset.signature === signature) return;
+    if (!stats || meta.dataset.signature === signature) return;
     meta.dataset.signature = signature;
-    meta.replaceChildren(...values.map((value, index) => {
+    stats.replaceChildren(...values.map((value, index) => {
         const fragment = document.createDocumentFragment();
         if (index > 0) {
             const dot = document.createElement('span');
@@ -109,6 +135,17 @@ function upsertMeta(message) {
         fragment.append(item);
         return fragment;
     }));
+}
+
+function restoreMessages() {
+    document.querySelectorAll('#chat .mes').forEach((message) => {
+        const anchor = message.querySelector('.ntu-actions-anchor');
+        const buttons = message.querySelector('.ntu-actions > .mes_buttons');
+        if (anchor && buttons) anchor.after(buttons);
+        anchor?.remove();
+        message.querySelectorAll('[data-ntu-cache-source]').forEach((item) => delete item.dataset.ntuCacheSource);
+        message.querySelector(':scope > .mes_block > .ntu-meta')?.remove();
+    });
 }
 
 function refreshMessages(root = document) {
@@ -259,7 +296,7 @@ function init() {
             .filter(Boolean)
             .forEach((event) => ctx.eventSource.on(event, () => setTimeout(() => refreshMessages(), 0)));
     }
-    console.info('[UI-N] v0.1.1 loaded');
+    console.info('[UI-N] v0.1.2 loaded');
 }
 
 if (document.readyState === 'loading') {
@@ -271,6 +308,7 @@ if (document.readyState === 'loading') {
 export function onDisable() {
     document.body.classList.remove(ROOT_CLASS, 'ntu-compact-user');
     observer?.disconnect();
+    restoreMessages();
 }
 
 export function onEnable() {
