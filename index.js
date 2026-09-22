@@ -29,6 +29,11 @@ function save() {
     context()?.saveSettingsDebounced?.();
 }
 
+function resolvedTheme(theme = settings().theme) {
+    if (theme === 'light' || theme === 'dark') return theme;
+    return globalThis.matchMedia?.('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+}
+
 function applyAppearance() {
     const value = settings();
     const body = document.body;
@@ -41,8 +46,11 @@ function applyAppearance() {
 
     const toggle = document.getElementById('ntu_quick_toggle');
     toggle?.classList.toggle('ntu-active', Boolean(value.enabled));
-    toggle?.setAttribute('title', value.enabled ? '退出沉浸阅读' : '进入沉浸阅读');
-    document.getElementById('ntu_enabled')?.toggleAttribute('checked', Boolean(value.enabled));
+    toggle?.setAttribute('title', resolvedTheme(value.theme) === 'dark' ? '切换到日间主题' : '切换到夜间主题');
+    const enabled = document.getElementById('ntu_enabled');
+    if (enabled) enabled.checked = Boolean(value.enabled);
+    const theme = document.getElementById('ntu_theme');
+    if (theme) theme.value = value.theme;
 
     if (value.enabled) {
         setTimeout(() => refreshMessages(), 0);
@@ -177,12 +185,13 @@ function addQuickToggle() {
     button.id = 'ntu_quick_toggle';
     button.type = 'button';
     button.className = 'menu_button interactable fa-solid fa-book-open-reader';
-    button.setAttribute('aria-label', '切换沉浸阅读模式');
+    button.setAttribute('aria-label', '切换 UI-N 日间或夜间主题');
     button.addEventListener('click', () => {
         const value = settings();
-        value.enabled = !value.enabled;
+        value.enabled = true;
+        value.theme = resolvedTheme(value.theme) === 'dark' ? 'light' : 'dark';
         const checkbox = document.getElementById('ntu_enabled');
-        if (checkbox) checkbox.checked = value.enabled;
+        if (checkbox) checkbox.checked = true;
         applyAppearance();
         save();
     });
@@ -235,6 +244,7 @@ function addSettingsPanel() {
     content.append(settingRow('压缩用户消息', compact));
 
     const theme = document.createElement('select');
+    theme.id = 'ntu_theme';
     [['auto', '跟随系统'], ['light', '日间'], ['dark', '夜间']].forEach(([key, label]) => {
         const option = new Option(label, key, false, value.theme === key);
         theme.add(option);
@@ -296,7 +306,7 @@ function init() {
             .filter(Boolean)
             .forEach((event) => ctx.eventSource.on(event, () => setTimeout(() => refreshMessages(), 0)));
     }
-    console.info('[UI-N] v0.3.0 loaded');
+    console.info('[UI-N] v0.3.1 loaded');
 }
 
 if (document.readyState === 'loading') {
