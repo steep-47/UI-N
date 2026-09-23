@@ -1,6 +1,6 @@
 const MODULE_NAME = 'ui_n';
 const ROOT_CLASS = 'ntu-enabled';
-const VERSION = '0.5.6';
+const VERSION = '0.5.7';
 
 const defaults = {
     enabled: true,
@@ -19,7 +19,20 @@ let pointerStart = null;
 let composerBound = false;
 let composerLayout = null;
 let composerTouch = null;
+let chatTouch = null;
 let composerResizeObserver = null;
+
+function ensureChatBuffer() {
+    const chat = document.getElementById('chat');
+    if (!chat) return;
+    let buffer = document.getElementById('ntu_chat_buffer');
+    if (!buffer) {
+        buffer = document.createElement('div');
+        buffer.id = 'ntu_chat_buffer';
+        buffer.setAttribute('aria-hidden', 'true');
+    }
+    if (chat.lastElementChild !== buffer) chat.append(buffer);
+}
 
 function syncComposerClearance() {
     const form = document.getElementById('send_form');
@@ -215,6 +228,35 @@ function bindComposerBehavior() {
     const endComposerTouch = () => { composerTouch = null; };
     document.addEventListener('touchend', endComposerTouch, { capture: true, passive: true });
     document.addEventListener('touchcancel', endComposerTouch, { capture: true, passive: true });
+
+    /* Some mobile SillyTavern builds cancel native scrolling while a textarea
+       is focused. Manually scroll the chat after a real drag, while preserving
+       taps on choices and controls. */
+    document.addEventListener('touchstart', (event) => {
+        if (!document.body.classList.contains('ntu-composer-active') || event.touches.length !== 1) return;
+        const chat = event.target?.closest?.('#chat');
+        if (!chat || event.target.closest('button, input, textarea, select, a, [contenteditable="true"]')) return;
+        chatTouch = {
+            chat,
+            y: event.touches[0].clientY,
+            scrollTop: chat.scrollTop,
+            dragging: false,
+        };
+    }, { capture: true, passive: true });
+
+    document.addEventListener('touchmove', (event) => {
+        if (!chatTouch || event.touches.length !== 1) return;
+        const delta = chatTouch.y - event.touches[0].clientY;
+        if (!chatTouch.dragging && Math.abs(delta) < 6) return;
+        chatTouch.dragging = true;
+        chatTouch.chat.scrollTop = chatTouch.scrollTop + delta;
+        event.stopPropagation();
+        event.preventDefault();
+    }, { capture: true, passive: false });
+
+    const endChatTouch = () => { chatTouch = null; };
+    document.addEventListener('touchend', endChatTouch, { capture: true, passive: true });
+    document.addEventListener('touchcancel', endChatTouch, { capture: true, passive: true });
     updateViewport();
 }
 
@@ -368,6 +410,7 @@ function restoreMessages() {
 
 function refreshMessages(root = document) {
     root.querySelectorAll?.('#chat .mes').forEach(upsertMeta);
+    ensureChatBuffer();
 }
 
 function observeChat() {
@@ -387,6 +430,7 @@ function observeChat() {
     });
     observer.observe(chat, { childList: true, subtree: true, characterData: true });
     refreshMessages();
+    ensureChatBuffer();
 }
 
 function addQuickToggle() {
@@ -546,6 +590,7 @@ export function onDisable() {
     observer?.disconnect();
     restoreMessages();
     restoreComposerLayout();
+    document.getElementById('ntu_chat_buffer')?.remove();
 }
 
 export function onEnable() {
