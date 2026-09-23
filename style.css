@@ -98,7 +98,7 @@ body.ntu-enabled #form_sheld {
 }
 
 body.ntu-enabled #chat {
-    padding: 18px 0 var(--ntu-composer-clearance) !important;
+    padding: 18px 0 0 !important;
     scroll-padding-bottom: var(--ntu-composer-clearance) !important;
     border: 0 !important;
     border-radius: 0 !important;
@@ -119,6 +119,18 @@ body.ntu-enabled.ntu-composer-active #chat {
     overflow-y: auto !important;
     overscroll-behavior-y: contain !important;
     -webkit-overflow-scrolling: touch !important;
+    touch-action: pan-y !important;
+}
+
+body.ntu-enabled #chat #ntu_chat_buffer {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    height: var(--ntu-composer-clearance) !important;
+    min-height: var(--ntu-composer-clearance) !important;
+    flex: 0 0 var(--ntu-composer-clearance) !important;
+    display: block !important;
+    pointer-events: none !important;
+    background: transparent !important;
 }
 
 body.ntu-enabled #chat .mes {
