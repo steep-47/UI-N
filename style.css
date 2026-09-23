@@ -1125,3 +1125,233 @@ html body.ntu-enabled #chat .mes:not([is_user="true"]):has(.yiyi-choice-panel) .
 html body.ntu-enabled #chat .mes:not([is_user="true"]):has(.yiyi-choice-panel) .swipe_right {
     z-index: 5 !important;
 }
+
+/* =========================================================
+ * v0.5.12 — native control + World Info visual cleanup
+ * Keep native SillyTavern behavior, but remove leftover theme colors.
+ * ========================================================= */
+
+/* SillyTavern draws checkboxes itself, so accent-color alone is not enough.
+   Reuse its checkmark geometry with UI-N surfaces and accent. */
+html body.ntu-enabled input[type="checkbox"] {
+    outline: none !important;
+    border: 1px solid var(--ntu-border) !important;
+    background: var(--ntu-input) !important;
+    box-shadow: none !important;
+    filter: none !important;
+}
+
+html body.ntu-enabled input[type="checkbox"]::before {
+    box-shadow: inset 1em 1em var(--ntu-accent) !important;
+}
+
+html body.ntu-enabled input[type="checkbox"]:checked {
+    border-color: var(--ntu-accent) !important;
+    background: var(--ntu-accent) !important;
+}
+
+html body.ntu-enabled input[type="checkbox"]:checked::before {
+    box-shadow: inset 1em 1em var(--ntu-bg) !important;
+}
+
+html body.ntu-enabled input[type="checkbox"]:focus-visible {
+    outline: 2px solid color-mix(in srgb, var(--ntu-accent) 48%, transparent) !important;
+    outline-offset: 2px !important;
+}
+
+html body.ntu-enabled input[type="checkbox"]:disabled {
+    background: var(--ntu-panel) !important;
+    border-color: var(--ntu-border) !important;
+    opacity: .5 !important;
+}
+
+/* Range sliders also keep colors from the underlying theme in WebKit.
+   Normalize both the rail and thumb instead of relying on accent-color. */
+html body.ntu-enabled input[type="range"] {
+    accent-color: var(--ntu-accent) !important;
+    background: transparent !important;
+    filter: none !important;
+}
+
+html body.ntu-enabled input[type="range"]::-webkit-slider-runnable-track {
+    height: 5px !important;
+    border: 0 !important;
+    border-radius: 999px !important;
+    background: var(--ntu-faint) !important;
+    box-shadow: none !important;
+}
+
+html body.ntu-enabled input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    width: 17px !important;
+    height: 17px !important;
+    margin-top: -6px !important;
+    border: 2px solid var(--ntu-accent) !important;
+    border-radius: 50% !important;
+    background: var(--ntu-panel) !important;
+    box-shadow: none !important;
+}
+
+html body.ntu-enabled input[type="range"]::-moz-range-track {
+    height: 5px !important;
+    border: 0 !important;
+    border-radius: 999px !important;
+    background: var(--ntu-faint) !important;
+}
+
+html body.ntu-enabled input[type="range"]::-moz-range-thumb {
+    width: 17px !important;
+    height: 17px !important;
+    border: 2px solid var(--ntu-accent) !important;
+    border-radius: 50% !important;
+    background: var(--ntu-panel) !important;
+    box-shadow: none !important;
+}
+
+/* Select2 is used by the global World Info selector and many editor fields.
+   Theme the actual generated Select2 DOM; styling only the hidden <select>
+   leaves the foreign theme shell visible. */
+html body.ntu-enabled .select2-container {
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    filter: none !important;
+}
+
+html body.ntu-enabled .select2-container .select2-selection--single,
+html body.ntu-enabled .select2-container .select2-selection--multiple {
+    min-height: 38px !important;
+    background: var(--ntu-input) !important;
+    border: 1px solid var(--ntu-border) !important;
+    border-radius: 9px !important;
+    box-shadow: none !important;
+    filter: none !important;
+    color: var(--ntu-strong) !important;
+}
+
+html body.ntu-enabled .select2-container .select2-selection__rendered,
+html body.ntu-enabled .select2-container .select2-selection__choice__display,
+html body.ntu-enabled .select2-container .select2-search__field {
+    color: var(--ntu-strong) !important;
+    -webkit-text-fill-color: var(--ntu-strong) !important;
+    text-shadow: none !important;
+}
+
+html body.ntu-enabled .select2-container .select2-selection__placeholder,
+html body.ntu-enabled .select2-container .select2-search__field::placeholder {
+    color: var(--ntu-muted) !important;
+    -webkit-text-fill-color: var(--ntu-muted) !important;
+    opacity: 1 !important;
+}
+
+html body.ntu-enabled .select2-container .select2-selection--multiple {
+    padding: 3px 7px !important;
+}
+
+html body.ntu-enabled .select2-container .select2-selection--multiple .select2-selection__choice {
+    margin: 2px 4px 2px 0 !important;
+    padding: 2px 7px !important;
+    border: 1px solid var(--ntu-border) !important;
+    border-radius: 7px !important;
+    background: var(--ntu-elevated) !important;
+    color: var(--ntu-strong) !important;
+    box-shadow: none !important;
+}
+
+html body.ntu-enabled .select2-container .select2-selection__choice__remove,
+html body.ntu-enabled .select2-container .select2-selection__clear,
+html body.ntu-enabled .select2-container .select2-selection__arrow {
+    color: var(--ntu-muted) !important;
+    border-color: var(--ntu-border) !important;
+    background: transparent !important;
+}
+
+html body.ntu-enabled .select2-dropdown {
+    background: var(--ntu-panel) !important;
+    color: var(--ntu-text) !important;
+    border: 1px solid var(--ntu-border) !important;
+    border-radius: 9px !important;
+    box-shadow: 0 10px 28px var(--ntu-shadow) !important;
+    filter: none !important;
+}
+
+html body.ntu-enabled .select2-search--dropdown {
+    background: var(--ntu-panel) !important;
+}
+
+html body.ntu-enabled .select2-search--dropdown .select2-search__field {
+    background: var(--ntu-input) !important;
+    color: var(--ntu-strong) !important;
+    border: 1px solid var(--ntu-border) !important;
+    border-radius: 7px !important;
+    box-shadow: none !important;
+}
+
+html body.ntu-enabled .select2-results__option {
+    background: transparent !important;
+    color: var(--ntu-text) !important;
+}
+
+html body.ntu-enabled .select2-results__option--selected,
+html body.ntu-enabled .select2-results__option[aria-selected="true"] {
+    background: color-mix(in srgb, var(--ntu-accent) 14%, var(--ntu-panel)) !important;
+    color: var(--ntu-strong) !important;
+}
+
+html body.ntu-enabled .select2-results__option--highlighted,
+html body.ntu-enabled .select2-results__option--highlighted[aria-selected] {
+    background: var(--ntu-elevated) !important;
+    color: var(--ntu-strong) !important;
+}
+
+/* Global active World Info: remove the thick foreign-theme shell shown around
+   "No Worlds active. Click here to select." while preserving Select2 behavior. */
+html body.ntu-enabled #world_info + .select2-container,
+html body.ntu-enabled #world_info ~ .select2-container {
+    width: 100% !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    outline: 0 !important;
+}
+
+html body.ntu-enabled #world_info + .select2-container .select2-selection--multiple,
+html body.ntu-enabled #world_info ~ .select2-container .select2-selection--multiple {
+    width: 100% !important;
+    min-height: 42px !important;
+    padding: 5px 9px !important;
+    background: var(--ntu-input) !important;
+    border: 1px solid var(--ntu-border) !important;
+    border-radius: 11px !important;
+    box-shadow: none !important;
+    outline: 0 !important;
+}
+
+html body.ntu-enabled #world_info + .select2-container .select2-selection__rendered,
+html body.ntu-enabled #world_info ~ .select2-container .select2-selection__rendered {
+    min-height: 30px !important;
+    display: flex !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+}
+
+/* World Info editor rows should use the same quiet neutral surfaces. */
+html body.ntu-enabled #world_popup .world_info_select_block,
+html body.ntu-enabled #world_popup .world_entry,
+html body.ntu-enabled #world_popup .wi-card-entry {
+    border-color: var(--ntu-border) !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+}
+
+html body.ntu-enabled #world_popup .world_entry .killSwitch.fa-toggle-on,
+html body.ntu-enabled #world_popup .toggleEnabled,
+html body.ntu-enabled #world_popup .world_set {
+    color: var(--ntu-accent) !important;
+    filter: none !important;
+    text-shadow: none !important;
+}
+
