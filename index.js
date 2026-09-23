@@ -1,12 +1,12 @@
 const MODULE_NAME = 'ui_n';
 const ROOT_CLASS = 'ntu-enabled';
-const VERSION = '0.5.27';
+const VERSION = '0.5.28';
 
 const defaults = {
     enabled: true,
     theme: 'auto',
-    fontSize: 27,
-    lineHeight: 2.25,
+    fontSize: 32,
+    lineHeight: 2.50,
     sidePadding: 24,
     compactUser: true,
     tapChrome: true,
@@ -87,11 +87,14 @@ function settings() {
     /* v0.5.26: the reference layout uses visibly larger type. Migrate only the
        untouched legacy defaults; preserve any typography the user changed. */
     if (saved.fontSize === 19 && saved.lineHeight === 1.95 && saved.sidePadding === 24) {
-        saved.fontSize = 27;
-        saved.lineHeight = 2.25;
+        saved.fontSize = 32;
+        saved.lineHeight = 2.50;
     } else if (saved.fontSize === 23 && saved.lineHeight === 2.05 && saved.sidePadding === 24) {
-        saved.fontSize = 27;
-        saved.lineHeight = 2.25;
+        saved.fontSize = 32;
+        saved.lineHeight = 2.50;
+    } else if (saved.fontSize === 27 && saved.lineHeight === 2.25 && saved.sidePadding === 24) {
+        saved.fontSize = 32;
+        saved.lineHeight = 2.50;
     }
 
     ctx.extensionSettings[MODULE_NAME] = Object.assign(structuredClone(defaults), saved);
@@ -534,8 +537,8 @@ function addSettingsPanel() {
     theme.addEventListener('change', () => update('theme', theme.value));
     content.append(settingRow('显示模式', theme));
 
-    content.append(rangeControl('正文字号', 'fontSize', 16, 24, 1, value.fontSize));
-    content.append(rangeControl('正文行距', 'lineHeight', 1.55, 2.25, 0.05, value.lineHeight));
+    content.append(rangeControl('正文字号', 'fontSize', 16, 36, 1, value.fontSize));
+    content.append(rangeControl('正文行距', 'lineHeight', 1.55, 2.80, 0.05, value.lineHeight));
     content.append(rangeControl('左右留白', 'sidePadding', 14, 40, 1, value.sidePadding));
 }
 
