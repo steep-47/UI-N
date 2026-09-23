@@ -1,6 +1,6 @@
 const MODULE_NAME = 'ui_n';
 const ROOT_CLASS = 'ntu-enabled';
-const VERSION = '0.5.33';
+const VERSION = '0.5.34';
 
 const defaults = {
     enabled: true,
@@ -23,6 +23,7 @@ let composerTouch = null;
 let composerResizeObserver = null;
 let revealTimers = [];
 let composerRevealSuppressed = false;
+let quickToggleObserver = null;
 
 function revealComposerContext() {
     if (!document.body.classList.contains('ntu-composer-active')) return;
@@ -452,14 +453,56 @@ function observeChat() {
     ensureChatBuffer();
 }
 
+function updateQuickToggleLabel(item) {
+    if (!(item instanceof HTMLElement)) return;
+    const dark = resolvedTheme(settings().theme) === 'dark';
+    const icon = item.querySelector('.ntu-theme-toggle-icon');
+    const label = item.querySelector('.ntu-theme-toggle-label');
+    if (icon) icon.className = `ntu-theme-toggle-icon fa-solid ${dark ? 'fa-sun' : 'fa-moon'} fa-fw`;
+    if (label) label.textContent = dark ? '切换到日间模式' : '切换到夜间模式';
+    item.setAttribute('aria-label', dark ? '切换到日间模式' : '切换到夜间模式');
+    item.title = dark ? '切换到日间模式' : '切换到夜间模式';
+}
+
 function addQuickToggle() {
-    if (document.getElementById('ntu_quick_toggle')) return;
-    const button = document.createElement('button');
-    button.id = 'ntu_quick_toggle';
-    button.type = 'button';
-    button.className = 'menu_button interactable fa-solid fa-book-open-reader';
-    button.setAttribute('aria-label', '切换 UI-N 日间或夜间主题');
-    button.addEventListener('click', () => {
+    const menu = document.getElementById('extensionsMenu');
+    const existing = document.getElementById('ntu_quick_toggle');
+
+    /* v0.5.34: remove the old standalone send-bar button if it survived an
+       in-place extension update. The theme switch now belongs to the native
+       magic-wand extensions menu only. */
+    if (existing && existing.parentElement !== menu) existing.remove();
+
+    if (!menu) {
+        if (!quickToggleObserver && document.body) {
+            quickToggleObserver = new MutationObserver(() => {
+                if (!document.getElementById('extensionsMenu')) return;
+                quickToggleObserver?.disconnect();
+                quickToggleObserver = null;
+                addQuickToggle();
+            });
+            quickToggleObserver.observe(document.body, { childList: true, subtree: true });
+        }
+        return;
+    }
+
+    quickToggleObserver?.disconnect();
+    quickToggleObserver = null;
+
+    const current = document.getElementById('ntu_quick_toggle');
+    if (current && current.parentElement === menu) {
+        updateQuickToggleLabel(current);
+        return;
+    }
+
+    const item = document.createElement('div');
+    item.id = 'ntu_quick_toggle';
+    item.className = 'list-group-item flex-container flexGap5 interactable';
+    item.tabIndex = 0;
+    item.setAttribute('role', 'button');
+    item.innerHTML = '<i class="ntu-theme-toggle-icon fa-solid fa-moon fa-fw" aria-hidden="true"></i><span class="ntu-theme-toggle-label"></span>';
+
+    const toggle = () => {
         const value = settings();
         value.enabled = true;
         value.theme = resolvedTheme(value.theme) === 'dark' ? 'light' : 'dark';
@@ -467,10 +510,19 @@ function addQuickToggle() {
         if (checkbox) checkbox.checked = true;
         applyAppearance();
         save();
+        updateQuickToggleLabel(item);
+        menu.style.display = 'none';
+    };
+
+    item.addEventListener('click', toggle);
+    item.addEventListener('keydown', (event) => {
+        if (event.key !== 'Enter' && event.key !== ' ') return;
+        event.preventDefault();
+        toggle();
     });
 
-    const target = document.getElementById('leftSendForm') || document.getElementById('send_form');
-    target?.prepend(button);
+    updateQuickToggleLabel(item);
+    menu.append(item);
 }
 
 function settingRow(label, control) {
@@ -571,6 +623,7 @@ function init() {
     if (initialized) {
         ensureComposerLayout();
         applyAppearance();
+        addQuickToggle();
         observeChat();
         refreshMessages();
         return;
@@ -607,9 +660,12 @@ if (document.readyState === 'loading') {
 export function onDisable() {
     document.body.classList.remove(ROOT_CLASS, 'ntu-compact-user', 'ntu-chrome-hidden', 'ntu-composer-active');
     observer?.disconnect();
+    quickToggleObserver?.disconnect();
+    quickToggleObserver = null;
     restoreMessages();
     restoreComposerLayout();
     document.getElementById('ntu_chat_buffer')?.remove();
+    document.getElementById('ntu_quick_toggle')?.remove();
 }
 
 export function onEnable() {
