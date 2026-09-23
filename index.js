@@ -1,6 +1,6 @@
 const MODULE_NAME = 'ui_n';
 const ROOT_CLASS = 'ntu-enabled';
-const VERSION = '0.5.5';
+const VERSION = '0.5.6';
 
 const defaults = {
     enabled: true,
@@ -145,9 +145,11 @@ function bindComposerBehavior() {
 
     const updateViewport = () => {
         const viewport = globalThis.visualViewport;
+        const visualHeight = viewport?.height || globalThis.innerHeight || document.documentElement.clientHeight;
         const covered = viewport
             ? Math.max(0, globalThis.innerHeight - viewport.height - viewport.offsetTop)
             : 0;
+        document.documentElement.style.setProperty('--ntu-visual-height', `${Math.round(visualHeight)}px`);
         document.documentElement.style.setProperty('--ntu-keyboard-offset', `${covered}px`);
         requestAnimationFrame(() => {
             syncComposerHeight();
