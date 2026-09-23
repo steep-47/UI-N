@@ -1448,3 +1448,60 @@ html body.ntu-enabled #sheld #chat .mes_reasoning {
     box-shadow: none !important;
 }
 
+/* =========================================================
+ * v0.5.35 — clearer reasoning text hierarchy
+ * Only changes the color hierarchy of reasoning text.
+ * ========================================================= */
+
+:root {
+    --ntu-reasoning-text: #74736e;
+    --ntu-reasoning-strong: #92908a;
+}
+
+body[data-ntu-theme="light"] {
+    --ntu-reasoning-text: #8f8a82;
+    --ntu-reasoning-strong: #706b64;
+}
+
+body[data-ntu-theme="dark"] {
+    --ntu-reasoning-text: #74736e;
+    --ntu-reasoning-strong: #92908a;
+}
+
+@media (prefers-color-scheme: light) {
+    body[data-ntu-theme="auto"] {
+        --ntu-reasoning-text: #8f8a82;
+        --ntu-reasoning-strong: #706b64;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    body[data-ntu-theme="auto"] {
+        --ntu-reasoning-text: #74736e;
+        --ntu-reasoning-strong: #92908a;
+    }
+}
+
+/* Force the visible reasoning copy onto its own tonal level. SillyTavern has
+   separate colors for em/q/u inside reasoning, so cover normal text and common
+   emphasis nodes explicitly to keep the block visually distinct from final text. */
+html body.ntu-enabled #sheld #chat .mes_reasoning,
+html body.ntu-enabled #sheld #chat .mes_reasoning p,
+html body.ntu-enabled #sheld #chat .mes_reasoning li,
+html body.ntu-enabled #sheld #chat .mes_reasoning span,
+html body.ntu-enabled #sheld #chat .mes_reasoning em,
+html body.ntu-enabled #sheld #chat .mes_reasoning i {
+    color: var(--ntu-reasoning-text) !important;
+}
+
+html body.ntu-enabled #sheld #chat .mes_reasoning strong,
+html body.ntu-enabled #sheld #chat .mes_reasoning b,
+html body.ntu-enabled #sheld #chat .mes_reasoning_header,
+html body.ntu-enabled #sheld #chat .mes_reasoning_header * {
+    color: var(--ntu-reasoning-strong) !important;
+}
+
+html body.ntu-enabled #sheld #chat .mes_reasoning {
+    border-left-color: color-mix(in srgb, var(--ntu-reasoning-text) 54%, transparent) !important;
+}
+
