@@ -185,16 +185,18 @@ body.ntu-enabled #chat .mes_text {
     padding: 0 !important;
     margin: 0 !important;
     color: var(--ntu-text) !important;
-    font-family: "Noto Serif SC", "Source Han Serif SC", "Songti SC", "STSong", serif !important;
+    font-family: "Source Han Sans SC", "Noto Sans CJK SC", "Noto Sans SC", "Microsoft YaHei", "PingFang SC", sans-serif !important;
     font-size: var(--ntu-font-size) !important;
     font-weight: 400 !important;
-    line-height: var(--ntu-line-height) !important;
-    letter-spacing: .025em;
+    line-height: 2.05 !important;
+    letter-spacing: .018em;
     text-shadow: none !important;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
 }
 
 body.ntu-enabled #chat .mes_text p {
-    margin: 0 0 1.05em !important;
+    margin: 0 0 1.35em !important;
     text-indent: 2em;
 }
 
