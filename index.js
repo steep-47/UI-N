@@ -1,6 +1,6 @@
 const MODULE_NAME = 'ui_n';
 const ROOT_CLASS = 'ntu-enabled';
-const VERSION = '0.4.0';
+const VERSION = '0.4.1';
 
 const defaults = {
     enabled: true,
@@ -9,10 +9,13 @@ const defaults = {
     lineHeight: 1.95,
     sidePadding: 24,
     compactUser: true,
+    tapChrome: true,
 };
 
 let observer;
 let initialized = false;
+let chromeHidden = true;
+let pointerStart = null;
 
 function context() {
     return globalThis.SillyTavern?.getContext?.();
@@ -40,6 +43,7 @@ function applyAppearance() {
     const body = document.body;
     body.classList.toggle(ROOT_CLASS, Boolean(value.enabled));
     body.classList.toggle('ntu-compact-user', Boolean(value.compactUser));
+    body.classList.toggle('ntu-chrome-hidden', Boolean(value.enabled && value.tapChrome && chromeHidden));
     body.dataset.ntuTheme = value.theme;
     body.style.setProperty('--ntu-font-size', `${value.fontSize}px`);
     body.style.setProperty('--ntu-line-height', String(value.lineHeight));
@@ -56,8 +60,41 @@ function applyAppearance() {
     if (value.enabled) {
         setTimeout(() => refreshMessages(), 0);
     } else {
+        body.classList.remove('ntu-chrome-hidden');
         restoreMessages();
     }
+}
+
+function isInteractiveTarget(target) {
+    if (!(target instanceof Element)) return true;
+    return Boolean(target.closest([
+        'a', 'button', 'input', 'textarea', 'select', 'label',
+        '[contenteditable="true"]', '[role="button"]', '.interactable',
+        '.mes_buttons', '.mes_edit_buttons', '.ntu-actions',
+        '.swipe_left', '.swipe_right', '.popup', '#options', '#extensionsMenu',
+    ].join(',')));
+}
+
+function bindReadingTap() {
+    document.addEventListener('pointerdown', (event) => {
+        if (!settings().enabled || !settings().tapChrome || event.pointerType === 'mouse' && event.button !== 0) return;
+        if (!event.target.closest?.('#chat') || isInteractiveTarget(event.target)) return;
+        pointerStart = { x: event.clientX, y: event.clientY, time: performance.now(), id: event.pointerId };
+    }, { passive: true });
+
+    document.addEventListener('pointerup', (event) => {
+        const start = pointerStart;
+        pointerStart = null;
+        if (!start || start.id !== event.pointerId || !event.target.closest?.('#chat') || isInteractiveTarget(event.target)) return;
+        const distance = Math.hypot(event.clientX - start.x, event.clientY - start.y);
+        const elapsed = performance.now() - start.time;
+        const selection = globalThis.getSelection?.();
+        if (distance > 12 || elapsed > 650 || selection && !selection.isCollapsed) return;
+        chromeHidden = !chromeHidden;
+        document.body.classList.toggle('ntu-chrome-hidden', chromeHidden);
+    }, { passive: true });
+
+    document.addEventListener('pointercancel', () => { pointerStart = null; }, { passive: true });
 }
 
 function textOf(element) {
@@ -244,6 +281,15 @@ function addSettingsPanel() {
     compact.addEventListener('change', () => update('compactUser', compact.checked));
     content.append(settingRow('压缩用户消息', compact));
 
+    const tapChrome = document.createElement('input');
+    tapChrome.type = 'checkbox';
+    tapChrome.checked = value.tapChrome;
+    tapChrome.addEventListener('change', () => {
+        chromeHidden = tapChrome.checked;
+        update('tapChrome', tapChrome.checked);
+    });
+    content.append(settingRow('点击正文切换操作栏', tapChrome));
+
     const theme = document.createElement('select');
     theme.id = 'ntu_theme';
     [['auto', '跟随系统'], ['light', '日间'], ['dark', '夜间']].forEach(([key, label]) => {
@@ -297,6 +343,7 @@ function init() {
     settings();
     addSettingsPanel();
     addQuickToggle();
+    bindReadingTap();
     applyAppearance();
     observeChat();
 
@@ -317,7 +364,7 @@ if (document.readyState === 'loading') {
 }
 
 export function onDisable() {
-    document.body.classList.remove(ROOT_CLASS, 'ntu-compact-user');
+    document.body.classList.remove(ROOT_CLASS, 'ntu-compact-user', 'ntu-chrome-hidden');
     observer?.disconnect();
     restoreMessages();
 }
