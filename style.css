@@ -355,18 +355,18 @@ body.ntu-enabled .drawer-icon {
     opacity: .72;
 }
 
-#ntu_quick_toggle {
-    min-width: 38px;
-    min-height: 38px;
-    border: 0 !important;
-    background: transparent !important;
-    color: var(--SmartThemeEmColor);
+/* Theme switch is a normal item inside SillyTavern's magic-wand menu.
+   Do not create a separate send-bar control. */
+html body.ntu-enabled #extensionsMenu #ntu_quick_toggle {
+    color: var(--ntu-text) !important;
+    text-shadow: none !important;
     box-shadow: none !important;
 }
 
-#ntu_quick_toggle.ntu-active {
-    color: var(--ntu-accent) !important;
-    opacity: 1 !important;
+html body.ntu-enabled #extensionsMenu #ntu_quick_toggle .ntu-theme-toggle-icon {
+    width: 1.25em;
+    text-align: center;
+    color: var(--ntu-muted) !important;
 }
 
 .ntu-settings-content {
