@@ -3,6 +3,7 @@
     --ntu-line-height: 1.95;
     --ntu-side-padding: 24px;
     --ntu-keyboard-offset: 0px;
+    --ntu-composer-clearance: 126px;
     --ntu-bg: #1f201e;
     --ntu-panel: #262724;
     --ntu-elevated: #2c2d2a;
@@ -96,7 +97,8 @@ body.ntu-enabled #form_sheld {
 }
 
 body.ntu-enabled #chat {
-    padding: 18px 0 126px !important;
+    padding: 18px 0 var(--ntu-composer-clearance) !important;
+    scroll-padding-bottom: var(--ntu-composer-clearance) !important;
     border: 0 !important;
     border-radius: 0 !important;
     box-shadow: none !important;
