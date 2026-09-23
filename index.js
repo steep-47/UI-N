@@ -1,6 +1,6 @@
 const MODULE_NAME = 'ui_n';
 const ROOT_CLASS = 'ntu-enabled';
-const VERSION = '0.4.3';
+const VERSION = '0.5.0';
 
 const defaults = {
     enabled: true,
@@ -16,6 +16,7 @@ let observer;
 let initialized = false;
 let chromeHidden = true;
 let pointerStart = null;
+let composerBound = false;
 
 function context() {
     return globalThis.SillyTavern?.getContext?.();
@@ -104,10 +105,40 @@ function bindReadingTap() {
         if (chromeHidden && document.activeElement instanceof HTMLElement) {
             document.activeElement.blur();
         }
+        if (chromeHidden) document.body.classList.remove('ntu-composer-active');
         document.body.classList.toggle('ntu-chrome-hidden', chromeHidden);
     }, { passive: true });
 
     document.addEventListener('pointercancel', () => { pointerStart = null; }, { passive: true });
+}
+
+function bindComposerBehavior() {
+    if (composerBound) return;
+    composerBound = true;
+
+    const updateViewport = () => {
+        const viewport = globalThis.visualViewport;
+        const covered = viewport
+            ? Math.max(0, globalThis.innerHeight - viewport.height - viewport.offsetTop)
+            : 0;
+        document.documentElement.style.setProperty('--ntu-keyboard-offset', `${covered}px`);
+    };
+
+    document.addEventListener('focusin', (event) => {
+        if (event.target?.id !== 'send_textarea') return;
+        document.body.classList.add('ntu-composer-active');
+        updateViewport();
+    });
+
+    document.addEventListener('focusout', (event) => {
+        if (event.target?.id !== 'send_textarea') return;
+        setTimeout(() => document.body.classList.remove('ntu-composer-active'), 0);
+    });
+
+    globalThis.visualViewport?.addEventListener('resize', updateViewport, { passive: true });
+    globalThis.visualViewport?.addEventListener('scroll', updateViewport, { passive: true });
+    globalThis.addEventListener('resize', updateViewport, { passive: true });
+    updateViewport();
 }
 
 function textOf(element) {
@@ -357,6 +388,7 @@ function init() {
     addSettingsPanel();
     addQuickToggle();
     bindReadingTap();
+    bindComposerBehavior();
     applyAppearance();
     observeChat();
 
@@ -377,7 +409,7 @@ if (document.readyState === 'loading') {
 }
 
 export function onDisable() {
-    document.body.classList.remove(ROOT_CLASS, 'ntu-compact-user', 'ntu-chrome-hidden');
+    document.body.classList.remove(ROOT_CLASS, 'ntu-compact-user', 'ntu-chrome-hidden', 'ntu-composer-active');
     observer?.disconnect();
     restoreMessages();
 }
