@@ -1,6 +1,6 @@
 const MODULE_NAME = 'ui_n';
 const ROOT_CLASS = 'ntu-enabled';
-const VERSION = '0.5.3';
+const VERSION = '0.5.4';
 
 const defaults = {
     enabled: true,
@@ -18,6 +18,20 @@ let chromeHidden = true;
 let pointerStart = null;
 let composerBound = false;
 let composerLayout = null;
+let composerTouch = null;
+
+function syncComposerHeight(textarea = document.getElementById('send_textarea')) {
+    if (!(textarea instanceof HTMLTextAreaElement) || !document.body.classList.contains(ROOT_CLASS)) return;
+    const viewportHeight = globalThis.visualViewport?.height || globalThis.innerHeight || 720;
+    const maximum = Math.max(96, Math.min(viewportHeight * 0.34, 280));
+
+    /* Android WebView does not consistently honour field-sizing/content or a
+       textarea's intrinsic auto height. Measure scrollHeight explicitly. */
+    textarea.style.setProperty('height', 'auto', 'important');
+    const desired = Math.max(38, Math.min(textarea.scrollHeight, maximum));
+    textarea.style.setProperty('height', `${Math.ceil(desired)}px`, 'important');
+    textarea.style.setProperty('overflow-y', textarea.scrollHeight > maximum + 1 ? 'auto' : 'hidden', 'important');
+}
 
 function context() {
     return globalThis.SillyTavern?.getContext?.();
@@ -123,12 +137,22 @@ function bindComposerBehavior() {
             ? Math.max(0, globalThis.innerHeight - viewport.height - viewport.offsetTop)
             : 0;
         document.documentElement.style.setProperty('--ntu-keyboard-offset', `${covered}px`);
+        requestAnimationFrame(() => syncComposerHeight());
     };
+
+    document.addEventListener('input', (event) => {
+        if (event.target?.id === 'send_textarea') syncComposerHeight(event.target);
+    }, true);
+
+    document.addEventListener('change', (event) => {
+        if (event.target?.id === 'send_textarea') syncComposerHeight(event.target);
+    }, true);
 
     document.addEventListener('focusin', (event) => {
         if (event.target?.id !== 'send_textarea') return;
         document.body.classList.add('ntu-composer-active');
         updateViewport();
+        requestAnimationFrame(() => syncComposerHeight(event.target));
     });
 
     document.addEventListener('focusout', (event) => {
@@ -139,6 +163,35 @@ function bindComposerBehavior() {
     globalThis.visualViewport?.addEventListener('resize', updateViewport, { passive: true });
     globalThis.visualViewport?.addEventListener('scroll', updateViewport, { passive: true });
     globalThis.addEventListener('resize', updateViewport, { passive: true });
+
+    /* SillyTavern and some extensions attach swipe handlers above the editor.
+       Capture a real vertical drag and scroll the textarea ourselves so long
+       drafts remain independently scrollable in Android WebViews. */
+    document.addEventListener('touchstart', (event) => {
+        const textarea = event.target?.closest?.('#send_textarea');
+        if (!textarea || textarea.scrollHeight <= textarea.clientHeight + 1 || event.touches.length !== 1) return;
+        composerTouch = {
+            textarea,
+            y: event.touches[0].clientY,
+            scrollTop: textarea.scrollTop,
+            dragging: false,
+        };
+        event.stopPropagation();
+    }, { capture: true, passive: true });
+
+    document.addEventListener('touchmove', (event) => {
+        if (!composerTouch || event.touches.length !== 1) return;
+        const delta = composerTouch.y - event.touches[0].clientY;
+        if (!composerTouch.dragging && Math.abs(delta) < 6) return;
+        composerTouch.dragging = true;
+        composerTouch.textarea.scrollTop = composerTouch.scrollTop + delta;
+        event.stopPropagation();
+        event.preventDefault();
+    }, { capture: true, passive: false });
+
+    const endComposerTouch = () => { composerTouch = null; };
+    document.addEventListener('touchend', endComposerTouch, { capture: true, passive: true });
+    document.addEventListener('touchcancel', endComposerTouch, { capture: true, passive: true });
     updateViewport();
 }
 
@@ -172,6 +225,7 @@ function ensureComposerLayout() {
     shell.append(textSlot, tools);
     form.prepend(shell);
     composerLayout = { shell, moves };
+    requestAnimationFrame(() => syncComposerHeight(textarea));
 }
 
 function restoreComposerLayout() {
