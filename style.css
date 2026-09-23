@@ -1,6 +1,6 @@
 :root {
-    --ntu-font-size: 32px;
-    --ntu-line-height: 2.50;
+    --ntu-font-size: 23px;
+    --ntu-line-height: 2.10;
     --ntu-side-padding: 24px;
     --ntu-keyboard-offset: 0px;
     --ntu-visual-height: 100dvh;
@@ -196,7 +196,7 @@ body.ntu-enabled #chat .mes_text {
 }
 
 body.ntu-enabled #chat .mes_text p {
-    margin: 0 0 1em !important;
+    margin: 0 0 .75em !important;
     text-indent: 2em;
 }
 
