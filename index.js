@@ -1,6 +1,6 @@
 const MODULE_NAME = 'ui_n';
 const ROOT_CLASS = 'ntu-enabled';
-const VERSION = '0.5.28';
+const VERSION = '0.5.29';
 
 const defaults = {
     enabled: true,
@@ -10,6 +10,7 @@ const defaults = {
     sidePadding: 24,
     compactUser: true,
     tapChrome: true,
+    typographyPresetVersion: 1,
 };
 
 let observer;
@@ -84,17 +85,13 @@ function settings() {
     if (!ctx) return structuredClone(defaults);
     const saved = ctx.extensionSettings[MODULE_NAME] || {};
 
-    /* v0.5.26: the reference layout uses visibly larger type. Migrate only the
-       untouched legacy defaults; preserve any typography the user changed. */
-    if (saved.fontSize === 19 && saved.lineHeight === 1.95 && saved.sidePadding === 24) {
+    /* v0.5.29: apply the reference typography once regardless of legacy
+       saved values. Earlier exact-value migrations could be skipped whenever
+       one saved slider differed, leaving 27 / 2.25 active in practice. */
+    if (saved.typographyPresetVersion !== 1) {
         saved.fontSize = 32;
         saved.lineHeight = 2.50;
-    } else if (saved.fontSize === 23 && saved.lineHeight === 2.05 && saved.sidePadding === 24) {
-        saved.fontSize = 32;
-        saved.lineHeight = 2.50;
-    } else if (saved.fontSize === 27 && saved.lineHeight === 2.25 && saved.sidePadding === 24) {
-        saved.fontSize = 32;
-        saved.lineHeight = 2.50;
+        saved.typographyPresetVersion = 1;
     }
 
     ctx.extensionSettings[MODULE_NAME] = Object.assign(structuredClone(defaults), saved);
