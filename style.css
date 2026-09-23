@@ -633,6 +633,22 @@ html body.ntu-enabled #extensionsMenu .fa-solid {
     opacity: 1 !important;
 }
 
+html body.ntu-enabled #options *,
+html body.ntu-enabled #extensionsMenu * {
+    color: var(--ntu-strong) !important;
+    -webkit-text-fill-color: var(--ntu-strong) !important;
+    text-shadow: none !important;
+    opacity: 1 !important;
+}
+
+html body.ntu-enabled #options .fa-solid,
+html body.ntu-enabled #options .fa-regular,
+html body.ntu-enabled #extensionsMenu .fa-solid,
+html body.ntu-enabled #extensionsMenu .fa-regular {
+    color: var(--ntu-text) !important;
+    -webkit-text-fill-color: var(--ntu-text) !important;
+}
+
 html body.ntu-enabled .bg_example,
 html body.ntu-enabled .background_select {
     border-color: var(--ntu-border) !important;
