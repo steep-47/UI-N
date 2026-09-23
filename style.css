@@ -878,9 +878,7 @@ html body.ntu-enabled #form_sheld #send_form {
     min-width: 0 !important;
     min-height: 78px !important;
     height: auto !important;
-    display: grid !important;
-    grid-template-columns: auto minmax(0, 1fr) auto !important;
-    grid-template-rows: auto 40px !important;
+    display: block !important;
     align-items: center !important;
     gap: 3px 6px !important;
     padding: 9px 10px 8px !important;
@@ -888,6 +886,37 @@ html body.ntu-enabled #form_sheld #send_form {
     background: var(--ntu-panel) !important;
     box-shadow: 0 10px 32px var(--ntu-shadow) !important;
     overflow: hidden !important;
+}
+
+html body.ntu-enabled #form_sheld #send_form .ntu-composer-layout {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 3px !important;
+}
+
+html body.ntu-enabled #form_sheld #send_form .ntu-composer-text-slot {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    display: block !important;
+}
+
+html body.ntu-enabled #form_sheld #send_form .ntu-composer-tools {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    min-height: 40px !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 4px !important;
+}
+
+html body.ntu-enabled #form_sheld #send_form .ntu-composer-spacer {
+    min-width: 8px !important;
+    flex: 1 1 auto !important;
 }
 
 html body.ntu-enabled #form_sheld #send_form #leftSendForm,
@@ -904,15 +933,11 @@ html body.ntu-enabled #form_sheld #send_form #rightSendForm {
 }
 
 html body.ntu-enabled #form_sheld #send_form #leftSendForm {
-    grid-column: 1 !important;
-    grid-row: 2 !important;
-    justify-self: start !important;
+    order: 1 !important;
 }
 
 html body.ntu-enabled #form_sheld #send_form #rightSendForm {
-    grid-column: 3 !important;
-    grid-row: 2 !important;
-    justify-self: end !important;
+    order: 3 !important;
 }
 
 /* Third-party themes may nest the textarea inside either button wrapper.
@@ -927,8 +952,6 @@ html body.ntu-enabled #form_sheld #send_form > :has(> #send_textarea) {
 }
 
 html body.ntu-enabled #form_sheld #send_form #send_textarea {
-    grid-column: 1 / -1 !important;
-    grid-row: 1 !important;
     width: 100% !important;
     min-width: 0 !important;
     height: auto !important;
