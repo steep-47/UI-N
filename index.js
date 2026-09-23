@@ -1,6 +1,6 @@
 const MODULE_NAME = 'ui_n';
 const ROOT_CLASS = 'ntu-enabled';
-const VERSION = '0.5.7';
+const VERSION = '0.5.8';
 
 const defaults = {
     enabled: true,
@@ -21,6 +21,19 @@ let composerLayout = null;
 let composerTouch = null;
 let chatTouch = null;
 let composerResizeObserver = null;
+let revealTimers = [];
+
+function revealComposerContext() {
+    if (!document.body.classList.contains('ntu-composer-active')) return;
+    ensureChatBuffer();
+    const chat = document.getElementById('chat');
+    if (chat) chat.scrollTop = chat.scrollHeight;
+}
+
+function scheduleComposerReveal() {
+    revealTimers.forEach(clearTimeout);
+    revealTimers = [0, 80, 180, 360].map((delay) => setTimeout(revealComposerContext, delay));
+}
 
 function ensureChatBuffer() {
     const chat = document.getElementById('chat');
@@ -167,6 +180,7 @@ function bindComposerBehavior() {
         requestAnimationFrame(() => {
             syncComposerHeight();
             syncComposerClearance();
+            scheduleComposerReveal();
         });
     };
 
@@ -185,6 +199,7 @@ function bindComposerBehavior() {
         requestAnimationFrame(() => {
             syncComposerHeight(event.target);
             syncComposerClearance();
+            scheduleComposerReveal();
         });
     });
 
@@ -242,6 +257,8 @@ function bindComposerBehavior() {
             scrollTop: chat.scrollTop,
             dragging: false,
         };
+        revealTimers.forEach(clearTimeout);
+        revealTimers = [];
     }, { capture: true, passive: true });
 
     document.addEventListener('touchmove', (event) => {
