@@ -927,6 +927,29 @@ html body.ntu-enabled #form_sheld #send_form #send_but {
     flex: 0 0 38px !important;
 }
 
+/* Novel-reader interaction: a short tap on non-interactive chat content
+   reveals or hides the fixed chrome without changing scroll position. */
+html body.ntu-enabled #top-bar,
+html body.ntu-enabled #top-settings-holder,
+html body.ntu-enabled #form_sheld {
+    transition: opacity .18s ease, transform .18s ease, visibility .18s ease !important;
+}
+
+html body.ntu-enabled.ntu-chrome-hidden #top-bar,
+html body.ntu-enabled.ntu-chrome-hidden #top-settings-holder {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    transform: translateY(-10px) !important;
+}
+
+html body.ntu-enabled.ntu-chrome-hidden #form_sheld {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    transform: translateY(12px) !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
     body.ntu-enabled * {
         transition: none !important;
