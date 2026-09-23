@@ -110,12 +110,19 @@ body.ntu-enabled #chat {
 /* The Android layout viewport remains full-height behind the software
    keyboard. While editing, use the visual viewport instead so the chat's
    scrollable bottom and its buffer stay above the keyboard. */
+body.ntu-enabled.ntu-composer-active #sheld {
+    box-sizing: border-box !important;
+    height: calc(var(--ntu-visual-height) - var(--topBarBlockSize, 0px)) !important;
+    min-height: 0 !important;
+    max-height: calc(var(--ntu-visual-height) - var(--topBarBlockSize, 0px)) !important;
+}
+
 body.ntu-enabled.ntu-composer-active #chat {
     box-sizing: border-box !important;
-    height: var(--ntu-visual-height) !important;
+    height: auto !important;
     min-height: 0 !important;
-    max-height: var(--ntu-visual-height) !important;
-    flex: 0 0 var(--ntu-visual-height) !important;
+    max-height: none !important;
+    flex: 1 1 auto !important;
     overflow-y: auto !important;
     overscroll-behavior-y: contain !important;
     -webkit-overflow-scrolling: touch !important;
@@ -1048,6 +1055,20 @@ html body.ntu-enabled #form_sheld {
     padding: 0 6px !important;
     background: transparent !important;
     z-index: 100 !important;
+}
+
+/* While the keyboard is open, return the composer to SillyTavern's native
+   flex column. The chat then occupies only the remaining space above it,
+   making overlap structurally impossible instead of compensating by scroll. */
+html body.ntu-enabled.ntu-composer-active #sheld #form_sheld {
+    position: static !important;
+    inset: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 6px calc(6px + env(safe-area-inset-bottom)) !important;
+    flex: 0 0 auto !important;
+    transform: none !important;
 }
 
 /* Novel-reader interaction: a short tap on non-interactive chat content
