@@ -188,7 +188,7 @@ body.ntu-enabled #chat .mes_text {
     font-family: "Source Han Sans SC", "Noto Sans CJK SC", "Noto Sans SC", "Microsoft YaHei", "PingFang SC", sans-serif !important;
     font-size: var(--ntu-font-size) !important;
     font-weight: 400 !important;
-    line-height: 2.05 !important;
+    line-height: var(--ntu-line-height) !important;
     letter-spacing: .018em;
     text-shadow: none !important;
     text-rendering: optimizeLegibility;
@@ -196,7 +196,7 @@ body.ntu-enabled #chat .mes_text {
 }
 
 body.ntu-enabled #chat .mes_text p {
-    margin: 0 0 1.35em !important;
+    margin: 0 0 .80em !important;
     text-indent: 2em;
 }
 
@@ -907,7 +907,7 @@ html body.ntu-enabled #sheld #chat .mes .mes_text {
     font-family: "Source Han Sans SC", "Noto Sans CJK SC", "Noto Sans SC", "Noto Sans", "Roboto", "Microsoft YaHei", "PingFang SC", sans-serif !important;
     font-size: var(--ntu-font-size) !important;
     font-weight: 400 !important;
-    line-height: 2.05 !important;
+    line-height: var(--ntu-line-height) !important;
     letter-spacing: .018em !important;
     text-align: left !important;
     writing-mode: horizontal-tb !important;
