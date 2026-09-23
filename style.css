@@ -1350,3 +1350,137 @@ html body.ntu-enabled #world_popup .world_set {
     text-shadow: none !important;
 }
 
+/* =========================================================
+ * v0.5.31 — message chrome polish
+ * Only refines metadata, user prompts and reasoning controls.
+ * Reading typography/body layout from v0.5.30 is untouched.
+ * ========================================================= */
+
+/* Metadata should read like quiet marginalia, not a toolbar row. */
+html body.ntu-enabled #sheld #chat .mes .ntu-meta {
+    min-height: 30px !important;
+    margin: 0 0 6px !important;
+    gap: 4px 7px !important;
+    color: color-mix(in srgb, var(--ntu-muted) 88%, transparent) !important;
+    font: 500 12px/1.25 system-ui, -apple-system, "Segoe UI", sans-serif !important;
+    opacity: .82;
+}
+
+html body.ntu-enabled #sheld #chat .mes .ntu-meta-stats {
+    gap: 4px 7px !important;
+}
+
+html body.ntu-enabled #sheld #chat .mes .ntu-meta-item:first-of-type {
+    color: var(--ntu-muted) !important;
+}
+
+html body.ntu-enabled #sheld #chat .mes .ntu-meta-dot {
+    opacity: .52 !important;
+}
+
+/* Action icons stay available, but no longer look like three heavy cards. */
+html body.ntu-enabled #sheld #chat .ntu-actions .mes_buttons {
+    gap: 3px !important;
+}
+
+html body.ntu-enabled #sheld #chat .ntu-actions .mes_button,
+html body.ntu-enabled #sheld #chat .ntu-actions .mes_edit_buttons > * {
+    min-width: 29px !important;
+    width: 29px !important;
+    min-height: 29px !important;
+    height: 29px !important;
+    padding: 0 !important;
+    border-radius: 8px !important;
+    background: transparent !important;
+    border: 1px solid transparent !important;
+    color: var(--ntu-muted) !important;
+    opacity: .78 !important;
+}
+
+html body.ntu-enabled #sheld #chat .ntu-actions .mes_button:hover,
+html body.ntu-enabled #sheld #chat .ntu-actions .mes_button:active,
+html body.ntu-enabled #sheld #chat .ntu-actions .mes_edit_buttons > *:hover,
+html body.ntu-enabled #sheld #chat .ntu-actions .mes_edit_buttons > *:active {
+    background: color-mix(in srgb, var(--ntu-panel) 62%, transparent) !important;
+    border-color: color-mix(in srgb, var(--ntu-border) 72%, transparent) !important;
+    color: var(--ntu-strong) !important;
+    opacity: 1 !important;
+}
+
+/* User input becomes a compact annotation instead of a full-width content card. */
+html body.ntu-enabled.ntu-compact-user #sheld #chat .mes[is_user="true"] {
+    margin-top: 4px !important;
+    padding-top: 4px !important;
+    padding-bottom: 8px !important;
+}
+
+html body.ntu-enabled.ntu-compact-user #sheld #chat .mes[is_user="true"] .mes_text {
+    box-sizing: border-box !important;
+    width: fit-content !important;
+    max-width: min(88%, 620px) !important;
+    padding: 6px 10px !important;
+    border-left: 2px solid color-mix(in srgb, var(--ntu-muted) 45%, transparent) !important;
+    border-radius: 0 7px 7px 0 !important;
+    background: color-mix(in srgb, var(--ntu-panel) 34%, transparent) !important;
+    color: var(--ntu-muted) !important;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif !important;
+    font-size: calc(var(--ntu-font-size) * .70) !important;
+    font-weight: 400 !important;
+    line-height: 1.45 !important;
+    letter-spacing: 0 !important;
+}
+
+html body.ntu-enabled.ntu-compact-user #sheld #chat .mes[is_user="true"] .mes_text p {
+    margin: 0 !important;
+    text-indent: 0 !important;
+}
+
+/* Reasoning: remove the wide grey slab; keep a small collapsible control. */
+html body.ntu-enabled #sheld #chat .mes_reasoning_details {
+    margin: 0 0 6px !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+html body.ntu-enabled #sheld #chat .mes_reasoning_details .mes_reasoning_summary {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+}
+
+html body.ntu-enabled #sheld #chat .mes_reasoning_header {
+    width: fit-content !important;
+    min-height: 0 !important;
+    margin: 2px 0 7px !important;
+    padding: 5px 9px !important;
+    padding-right: 27px !important;
+    border-radius: 8px !important;
+    background: color-mix(in srgb, var(--ntu-panel) 58%, transparent) !important;
+    border: 1px solid color-mix(in srgb, var(--ntu-border) 72%, transparent) !important;
+    color: var(--ntu-muted) !important;
+    font: 500 12.5px/1.25 system-ui, -apple-system, "Segoe UI", sans-serif !important;
+    box-shadow: none !important;
+}
+
+html body.ntu-enabled #sheld #chat .mes_reasoning_details .mes_reasoning_arrow {
+    right: 8px !important;
+    font-size: 10px !important;
+    width: 10px !important;
+    height: 10px !important;
+    opacity: .68 !important;
+}
+
+html body.ntu-enabled #sheld #chat .mes_reasoning {
+    margin: 0 0 8px !important;
+    padding: 6px 0 6px 11px !important;
+    border-left: 1px solid color-mix(in srgb, var(--ntu-muted) 42%, transparent) !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    color: var(--ntu-muted) !important;
+    font-size: calc(var(--ntu-font-size) * .70) !important;
+    line-height: 1.65 !important;
+    box-shadow: none !important;
+}
+
