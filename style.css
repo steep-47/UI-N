@@ -722,7 +722,7 @@ html body.ntu-enabled .background_select {
 }
 
 html body.ntu-enabled input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]),
-html body.ntu-enabled textarea:not(#send_textarea),
+html body.ntu-enabled textarea:not(#send_textarea):not(.select2-search__field),
 html body.ntu-enabled select {
     background: var(--ntu-input) !important;
     color: var(--ntu-strong) !important;
@@ -1258,72 +1258,42 @@ html body.ntu-enabled #chat .mes_text .menu_button:hover {
     color: var(--ntu-strong) !important;
 }
 
-/* Select2 dropdown palette. Keep layout mostly native; only recolor surfaces. */
+/* Select2 / World Info: color-only skin.
+   Do not set height, min-height, width, padding, display, flex or overflow here.
+   TauriTavern/SillyTavern keeps full control of the native geometry. */
 html body.ntu-enabled .select2-container {
-    background: transparent !important;
-    border: 0 !important;
-    box-shadow: none !important;
+    color: var(--ntu-text) !important;
     filter: none !important;
+    text-shadow: none !important;
 }
 
 html body.ntu-enabled .select2-container .select2-selection--single,
 html body.ntu-enabled .select2-container .select2-selection--multiple {
-    background: var(--ntu-input) !important;
-    border: 1px solid var(--ntu-border) !important;
-    border-radius: 9px !important;
+    background-color: var(--ntu-input) !important;
+    color: var(--ntu-strong) !important;
+    border-color: var(--ntu-border) !important;
     box-shadow: none !important;
     filter: none !important;
-    color: var(--ntu-strong) !important;
+    text-shadow: none !important;
 }
 
 html body.ntu-enabled .select2-container .select2-selection__rendered,
 html body.ntu-enabled .select2-container .select2-selection__choice__display,
-html body.ntu-enabled .select2-container .select2-search__field {
+html body.ntu-enabled .select2-container .select2-selection__placeholder {
     color: var(--ntu-strong) !important;
     -webkit-text-fill-color: var(--ntu-strong) !important;
     text-shadow: none !important;
 }
 
-html body.ntu-enabled .select2-container .select2-selection__placeholder,
-html body.ntu-enabled .select2-container .select2-search__field::placeholder {
+html body.ntu-enabled .select2-container .select2-selection__placeholder {
     color: var(--ntu-muted) !important;
     -webkit-text-fill-color: var(--ntu-muted) !important;
-    opacity: 1 !important;
-}
-
-/* Select2's inline search is a textarea. UI-N's generic textarea styling can
-   otherwise turn it into an extra blank row on mobile/TauriTavern. Keep every
-   inline Select2 search field one-line and visually transparent. */
-html body.ntu-enabled .select2-container .select2-search--inline {
-    margin: 0 !important;
-    padding: 0 !important;
-    min-height: 28px !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    vertical-align: middle !important;
-}
-
-html body.ntu-enabled .select2-container .select2-search--inline textarea.select2-search__field {
-    box-sizing: border-box !important;
-    height: 28px !important;
-    min-height: 28px !important;
-    max-height: 28px !important;
-    margin: 0 !important;
-    padding: 3px 2px !important;
-    line-height: 22px !important;
-    overflow: hidden !important;
-    resize: none !important;
-    background: transparent !important;
-    border: 0 !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
 }
 
 html body.ntu-enabled .select2-container .select2-selection--multiple .select2-selection__choice {
-    border: 1px solid var(--ntu-border) !important;
-    border-radius: 7px !important;
-    background: var(--ntu-elevated) !important;
+    background-color: var(--ntu-elevated) !important;
     color: var(--ntu-strong) !important;
+    border-color: var(--ntu-border) !important;
     box-shadow: none !important;
 }
 
@@ -1332,136 +1302,42 @@ html body.ntu-enabled .select2-container .select2-selection__clear,
 html body.ntu-enabled .select2-container .select2-selection__arrow {
     color: var(--ntu-muted) !important;
     border-color: var(--ntu-border) !important;
-    background: transparent !important;
 }
 
 html body.ntu-enabled .select2-dropdown {
-    background: var(--ntu-panel) !important;
+    background-color: var(--ntu-panel) !important;
     color: var(--ntu-text) !important;
-    border: 1px solid var(--ntu-border) !important;
-    border-radius: 9px !important;
+    border-color: var(--ntu-border) !important;
     box-shadow: 0 10px 28px var(--ntu-shadow) !important;
     filter: none !important;
+    text-shadow: none !important;
 }
 
 html body.ntu-enabled .select2-search--dropdown {
-    background: var(--ntu-panel) !important;
+    background-color: var(--ntu-panel) !important;
 }
 
 html body.ntu-enabled .select2-search--dropdown .select2-search__field {
-    background: var(--ntu-input) !important;
+    background-color: var(--ntu-input) !important;
     color: var(--ntu-strong) !important;
-    border: 1px solid var(--ntu-border) !important;
-    border-radius: 7px !important;
+    border-color: var(--ntu-border) !important;
     box-shadow: none !important;
 }
 
 html body.ntu-enabled .select2-results__option {
-    background: transparent !important;
     color: var(--ntu-text) !important;
 }
 
 html body.ntu-enabled .select2-results__option--selected,
 html body.ntu-enabled .select2-results__option[aria-selected="true"] {
-    background: color-mix(in srgb, var(--ntu-accent) 14%, var(--ntu-panel)) !important;
+    background-color: color-mix(in srgb, var(--ntu-accent) 14%, var(--ntu-panel)) !important;
     color: var(--ntu-strong) !important;
 }
 
 html body.ntu-enabled .select2-results__option--highlighted,
 html body.ntu-enabled .select2-results__option--highlighted[aria-selected] {
-    background: var(--ntu-elevated) !important;
+    background-color: var(--ntu-elevated) !important;
     color: var(--ntu-strong) !important;
-}
-
-/* Global active World Info selector.
-   The previous rule let Select2's inline textarea inherit a large mobile
-   textarea height. Force the real generated control back to one compact row. */
-html body.ntu-enabled #world_info + .select2-container,
-html body.ntu-enabled #world_info ~ .select2-container {
-    box-sizing: border-box !important;
-    width: 100% !important;
-    height: auto !important;
-    min-height: 40px !important;
-    max-height: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    display: block !important;
-    background: transparent !important;
-    border: 0 !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
-    outline: 0 !important;
-}
-
-html body.ntu-enabled #world_info + .select2-container .select2-selection--multiple,
-html body.ntu-enabled #world_info ~ .select2-container .select2-selection--multiple {
-    box-sizing: border-box !important;
-    width: 100% !important;
-    height: auto !important;
-    min-height: 38px !important;
-    max-height: none !important;
-    margin: 0 !important;
-    padding: 4px 8px !important;
-    display: flex !important;
-    align-items: center !important;
-    flex-wrap: wrap !important;
-    gap: 3px !important;
-    background: var(--ntu-input) !important;
-    border: 1px solid var(--ntu-border) !important;
-    border-radius: 10px !important;
-    box-shadow: none !important;
-    overflow: visible !important;
-}
-
-html body.ntu-enabled #world_info + .select2-container .select2-selection__rendered,
-html body.ntu-enabled #world_info ~ .select2-container .select2-selection__rendered {
-    box-sizing: border-box !important;
-    width: 100% !important;
-    height: auto !important;
-    min-height: 30px !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    display: flex !important;
-    align-items: center !important;
-    flex-wrap: wrap !important;
-    gap: 3px !important;
-}
-
-html body.ntu-enabled #world_info + .select2-container .select2-search--inline,
-html body.ntu-enabled #world_info ~ .select2-container .select2-search--inline {
-    min-width: 0 !important;
-    flex: 1 1 180px !important;
-    display: flex !important;
-    align-items: center !important;
-}
-
-html body.ntu-enabled #world_info + .select2-container textarea.select2-search__field,
-html body.ntu-enabled #world_info ~ .select2-container textarea.select2-search__field {
-    box-sizing: border-box !important;
-    width: 100% !important;
-    min-width: 150px !important;
-    height: 30px !important;
-    min-height: 30px !important;
-    max-height: 30px !important;
-    margin: 0 !important;
-    padding: 4px 2px !important;
-    line-height: 22px !important;
-    display: block !important;
-    overflow: hidden !important;
-    resize: none !important;
-    background: transparent !important;
-    border: 0 !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
-}
-
-/* World Info editor rows use the same quiet neutral state colors. */
-html body.ntu-enabled #world_popup .world_info_select_block,
-html body.ntu-enabled #world_popup .world_entry,
-html body.ntu-enabled #world_popup .wi-card-entry {
-    border-color: var(--ntu-border) !important;
-    box-shadow: none !important;
-    text-shadow: none !important;
 }
 
 html body.ntu-enabled #world_popup .world_entry .killSwitch.fa-toggle-on,
@@ -1470,66 +1346,5 @@ html body.ntu-enabled #world_popup .world_set {
     color: var(--ntu-accent) !important;
     filter: none !important;
     text-shadow: none !important;
-}
-
-
-/* TauriTavern may wrap the original #world_info select before injecting
-   Select2, so the sibling selector above is not always reached. This fallback
-   only constrains empty/multi-select row height inside the World Info panel. */
-html body.ntu-enabled #world_popup .select2-selection--multiple {
-    min-height: 38px !important;
-    height: auto !important;
-}
-
-/* =========================================================
- * v0.5.15 — TauriTavern mobile World Info flex fix
- * In TauriTavern 2.3.0, #wiTopBlock becomes a column on mobile while
- * #WIMultiSelector keeps the generic .flex1 { flex:1 }. That makes the
- * selector grow vertically and creates the large empty row seen above.
- * Stop that main-axis growth and let the selector size to its contents.
- * ========================================================= */
-@media screen and (max-width: 1000px) {
-    html body.ntu-enabled #wiTopBlock {
-        align-items: stretch !important;
-    }
-
-    html body.ntu-enabled #WIMultiSelector {
-        flex: 0 0 auto !important;
-        flex-grow: 0 !important;
-        flex-shrink: 0 !important;
-        flex-basis: auto !important;
-        width: 100% !important;
-        height: auto !important;
-        min-height: 0 !important;
-        max-height: none !important;
-        align-self: stretch !important;
-        align-content: flex-start !important;
-    }
-
-    html body.ntu-enabled #WIMultiSelector .range-block-title {
-        flex: 0 0 100% !important;
-    }
-
-    html body.ntu-enabled #WIMultiSelector .range-block-range {
-        flex: 0 0 100% !important;
-        width: 100% !important;
-        height: auto !important;
-        min-height: 0 !important;
-        max-height: none !important;
-        align-self: flex-start !important;
-    }
-
-    html body.ntu-enabled #WIMultiSelector .select2-container {
-        height: auto !important;
-        min-height: 0 !important;
-        max-height: none !important;
-    }
-
-    html body.ntu-enabled #WIMultiSelector .select2-selection--multiple {
-        height: auto !important;
-        min-height: 38px !important;
-        max-height: 25vh !important;
-        align-content: center !important;
-    }
 }
 
