@@ -1,6 +1,6 @@
 const MODULE_NAME = 'ui_n';
 const ROOT_CLASS = 'ntu-enabled';
-const VERSION = '0.4.2';
+const VERSION = '0.4.3';
 
 const defaults = {
     enabled: true,
@@ -101,6 +101,9 @@ function bindReadingTap() {
         const selection = globalThis.getSelection?.();
         if (distance > 12 || elapsed > 650 || selection && !selection.isCollapsed) return;
         chromeHidden = !chromeHidden;
+        if (chromeHidden && document.activeElement instanceof HTMLElement) {
+            document.activeElement.blur();
+        }
         document.body.classList.toggle('ntu-chrome-hidden', chromeHidden);
     }, { passive: true });
 
