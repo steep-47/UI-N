@@ -1505,3 +1505,33 @@ html body.ntu-enabled #sheld #chat .mes_reasoning {
     border-left-color: color-mix(in srgb, var(--ntu-reasoning-text) 54%, transparent) !important;
 }
 
+/* =========================================================
+ * v0.5.36 — stronger emphasis contrast in light reasoning
+ * Dark mode was already readable; only the light-mode emphasis hierarchy
+ * needed a larger tonal and weight difference.
+ * ========================================================= */
+
+body[data-ntu-theme="light"].ntu-enabled #sheld #chat .mes_reasoning strong,
+body[data-ntu-theme="light"].ntu-enabled #sheld #chat .mes_reasoning b {
+    color: #4f4a43 !important;
+    font-weight: 700 !important;
+}
+
+body[data-ntu-theme="light"].ntu-enabled #sheld #chat .mes_reasoning {
+    --ntu-reasoning-text: #918c84;
+    --ntu-reasoning-strong: #4f4a43;
+}
+
+@media (prefers-color-scheme: light) {
+    body[data-ntu-theme="auto"].ntu-enabled #sheld #chat .mes_reasoning strong,
+    body[data-ntu-theme="auto"].ntu-enabled #sheld #chat .mes_reasoning b {
+        color: #4f4a43 !important;
+        font-weight: 700 !important;
+    }
+
+    body[data-ntu-theme="auto"].ntu-enabled #sheld #chat .mes_reasoning {
+        --ntu-reasoning-text: #918c84;
+        --ntu-reasoning-strong: #4f4a43;
+    }
+}
+
