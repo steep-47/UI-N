@@ -904,11 +904,11 @@ html body.ntu-enabled #sheld #chat .mes .mes_text {
     margin: 0 !important;
     padding: 0 !important;
     color: var(--ntu-text) !important;
-    font-family: "Noto Serif SC", "Source Han Serif SC", "Songti SC", "STSong", serif !important;
+    font-family: "Source Han Sans SC", "Noto Sans CJK SC", "Noto Sans SC", "Noto Sans", "Roboto", "Microsoft YaHei", "PingFang SC", sans-serif !important;
     font-size: var(--ntu-font-size) !important;
     font-weight: 400 !important;
-    line-height: var(--ntu-line-height) !important;
-    letter-spacing: .025em !important;
+    line-height: 2.05 !important;
+    letter-spacing: .018em !important;
     text-align: left !important;
     writing-mode: horizontal-tb !important;
 }
