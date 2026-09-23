@@ -1,6 +1,6 @@
 const MODULE_NAME = 'ui_n';
 const ROOT_CLASS = 'ntu-enabled';
-const VERSION = '0.5.0';
+const VERSION = '0.5.1';
 
 const defaults = {
     enabled: true,
@@ -17,6 +17,7 @@ let initialized = false;
 let chromeHidden = true;
 let pointerStart = null;
 let composerBound = false;
+let composerLayout = null;
 
 function context() {
     return globalThis.SillyTavern?.getContext?.();
@@ -139,6 +140,48 @@ function bindComposerBehavior() {
     globalThis.visualViewport?.addEventListener('scroll', updateViewport, { passive: true });
     globalThis.addEventListener('resize', updateViewport, { passive: true });
     updateViewport();
+}
+
+function ensureComposerLayout() {
+    if (composerLayout?.shell?.isConnected) return;
+    composerLayout = null;
+
+    const form = document.getElementById('send_form');
+    const textarea = document.getElementById('send_textarea');
+    const left = document.getElementById('leftSendForm');
+    const right = document.getElementById('rightSendForm');
+    if (!form || !textarea || !left || !right) return;
+
+    const shell = document.createElement('div');
+    shell.className = 'ntu-composer-layout';
+    const textSlot = document.createElement('div');
+    textSlot.className = 'ntu-composer-text-slot';
+    const tools = document.createElement('div');
+    tools.className = 'ntu-composer-tools';
+    const spacer = document.createElement('div');
+    spacer.className = 'ntu-composer-spacer';
+
+    const moves = [textarea, left, right].map((node) => {
+        const marker = document.createComment(`UI-N:${node.id}`);
+        node.before(marker);
+        return { node, marker };
+    });
+
+    textSlot.append(textarea);
+    tools.append(left, spacer, right);
+    shell.append(textSlot, tools);
+    form.prepend(shell);
+    composerLayout = { shell, moves };
+}
+
+function restoreComposerLayout() {
+    if (!composerLayout) return;
+    for (const { node, marker } of composerLayout.moves) {
+        if (marker.isConnected) marker.before(node);
+        marker.remove();
+    }
+    composerLayout.shell.remove();
+    composerLayout = null;
 }
 
 function textOf(element) {
@@ -378,6 +421,7 @@ function update(key, value) {
 
 function init() {
     if (initialized) {
+        ensureComposerLayout();
         applyAppearance();
         observeChat();
         refreshMessages();
@@ -387,6 +431,7 @@ function init() {
     settings();
     addSettingsPanel();
     addQuickToggle();
+    ensureComposerLayout();
     bindReadingTap();
     bindComposerBehavior();
     applyAppearance();
@@ -397,7 +442,10 @@ function init() {
     if (ctx?.eventSource && events) {
         [events.CHAT_CHANGED, events.USER_MESSAGE_RENDERED, events.CHARACTER_MESSAGE_RENDERED, events.MESSAGE_EDITED]
             .filter(Boolean)
-            .forEach((event) => ctx.eventSource.on(event, () => setTimeout(() => refreshMessages(), 0)));
+            .forEach((event) => ctx.eventSource.on(event, () => setTimeout(() => {
+                ensureComposerLayout();
+                refreshMessages();
+            }, 0)));
     }
     console.info(`[UI-N] v${VERSION} loaded`);
 }
@@ -412,6 +460,7 @@ export function onDisable() {
     document.body.classList.remove(ROOT_CLASS, 'ntu-compact-user', 'ntu-chrome-hidden', 'ntu-composer-active');
     observer?.disconnect();
     restoreMessages();
+    restoreComposerLayout();
 }
 
 export function onEnable() {
