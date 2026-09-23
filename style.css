@@ -196,7 +196,7 @@ body.ntu-enabled #chat .mes_text {
 }
 
 body.ntu-enabled #chat .mes_text p {
-    margin: 0 0 .80em !important;
+    margin: 0 0 1em !important;
     text-indent: 2em;
 }
 
