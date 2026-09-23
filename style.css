@@ -13,6 +13,8 @@
     --ntu-accent: #aeb8ad;
     --ntu-border: #3d3d3d;
     --ntu-shadow: rgba(0, 0, 0, .28);
+    --ntu-menu-text: #aaa7a2;
+    --ntu-menu-icon: #918e89;
 }
 
 body[data-ntu-theme="light"] {
@@ -27,6 +29,8 @@ body[data-ntu-theme="light"] {
     --ntu-accent: #667166;
     --ntu-border: #d5cec1;
     --ntu-shadow: rgba(70, 62, 50, .13);
+    --ntu-menu-text: #69665f;
+    --ntu-menu-icon: #807c74;
 }
 
 body[data-ntu-theme="dark"] {
@@ -41,6 +45,8 @@ body[data-ntu-theme="dark"] {
     --ntu-accent: #aeb8ad;
     --ntu-border: #3d3d3d;
     --ntu-shadow: rgba(0, 0, 0, .28);
+    --ntu-menu-text: #aaa7a2;
+    --ntu-menu-icon: #918e89;
 }
 
 @media (prefers-color-scheme: light) {
@@ -56,6 +62,8 @@ body[data-ntu-theme="dark"] {
         --ntu-accent: #667166;
         --ntu-border: #d5cec1;
         --ntu-shadow: rgba(70, 62, 50, .13);
+        --ntu-menu-text: #69665f;
+        --ntu-menu-icon: #807c74;
     }
 }
 
@@ -72,6 +80,8 @@ body[data-ntu-theme="dark"] {
         --ntu-accent: #aeb8ad;
         --ntu-border: #3d3d3d;
         --ntu-shadow: rgba(0, 0, 0, .28);
+        --ntu-menu-text: #aaa7a2;
+        --ntu-menu-icon: #918e89;
     }
 }
 
@@ -635,8 +645,8 @@ html body.ntu-enabled #extensionsMenu .fa-solid {
 
 html body.ntu-enabled #options *,
 html body.ntu-enabled #extensionsMenu * {
-    color: var(--ntu-strong) !important;
-    -webkit-text-fill-color: var(--ntu-strong) !important;
+    color: var(--ntu-menu-text) !important;
+    -webkit-text-fill-color: var(--ntu-menu-text) !important;
     text-shadow: none !important;
     opacity: 1 !important;
 }
@@ -661,8 +671,8 @@ html body.ntu-enabled #options .fa-solid,
 html body.ntu-enabled #options .fa-regular,
 html body.ntu-enabled #extensionsMenu .fa-solid,
 html body.ntu-enabled #extensionsMenu .fa-regular {
-    color: var(--ntu-text) !important;
-    -webkit-text-fill-color: var(--ntu-text) !important;
+    color: var(--ntu-menu-icon) !important;
+    -webkit-text-fill-color: var(--ntu-menu-icon) !important;
 }
 
 html body.ntu-enabled .bg_example,
