@@ -2,6 +2,7 @@
     --ntu-font-size: 19px;
     --ntu-line-height: 1.95;
     --ntu-side-padding: 24px;
+    --ntu-keyboard-offset: 0px;
     --ntu-bg: #1f201e;
     --ntu-panel: #262724;
     --ntu-elevated: #2c2d2a;
@@ -95,7 +96,7 @@ body.ntu-enabled #form_sheld {
 }
 
 body.ntu-enabled #chat {
-    padding: 18px 0 90px !important;
+    padding: 18px 0 126px !important;
     border: 0 !important;
     border-radius: 0 !important;
     box-shadow: none !important;
@@ -875,13 +876,18 @@ html body.ntu-enabled #form_sheld #send_form {
     box-sizing: border-box !important;
     width: min(820px, calc(100% - 12px)) !important;
     min-width: 0 !important;
-    min-height: 54px !important;
+    min-height: 78px !important;
     height: auto !important;
-    display: flex !important;
-    flex-direction: row !important;
-    flex-wrap: nowrap !important;
+    display: grid !important;
+    grid-template-columns: auto minmax(0, 1fr) auto !important;
+    grid-template-rows: auto 40px !important;
     align-items: center !important;
-    gap: 4px !important;
+    gap: 3px 6px !important;
+    padding: 9px 10px 8px !important;
+    border-radius: 24px !important;
+    background: var(--ntu-panel) !important;
+    box-shadow: 0 10px 32px var(--ntu-shadow) !important;
+    overflow: hidden !important;
 }
 
 html body.ntu-enabled #form_sheld #send_form #leftSendForm,
@@ -897,6 +903,18 @@ html body.ntu-enabled #form_sheld #send_form #rightSendForm {
     gap: 2px !important;
 }
 
+html body.ntu-enabled #form_sheld #send_form #leftSendForm {
+    grid-column: 1 !important;
+    grid-row: 2 !important;
+    justify-self: start !important;
+}
+
+html body.ntu-enabled #form_sheld #send_form #rightSendForm {
+    grid-column: 3 !important;
+    grid-row: 2 !important;
+    justify-self: end !important;
+}
+
 /* Third-party themes may nest the textarea inside either button wrapper.
    The wrapper that owns it must grow; otherwise pasted option text collapses
    into a one-character-wide column and makes the composer extremely tall. */
@@ -909,13 +927,15 @@ html body.ntu-enabled #form_sheld #send_form > :has(> #send_textarea) {
 }
 
 html body.ntu-enabled #form_sheld #send_form #send_textarea {
-    width: 0 !important;
+    grid-column: 1 / -1 !important;
+    grid-row: 1 !important;
+    width: 100% !important;
     min-width: 0 !important;
     height: auto !important;
     min-height: 38px !important;
-    max-height: min(22dvh, 132px) !important;
+    max-height: min(20dvh, 116px) !important;
     margin: 0 !important;
-    padding: 7px 5px !important;
+    padding: 5px 7px !important;
     display: block !important;
     flex: 1 1 auto !important;
     font-family: system-ui, -apple-system, "Segoe UI", sans-serif !important;
@@ -926,7 +946,7 @@ html body.ntu-enabled #form_sheld #send_form #send_textarea {
 }
 
 html body.ntu-enabled #form_sheld #send_form #send_textarea:not(:focus) {
-    max-height: 58px !important;
+    max-height: 46px !important;
 }
 
 html body.ntu-enabled #form_sheld #send_form .menu_button,
@@ -941,6 +961,26 @@ html body.ntu-enabled #form_sheld #send_form #send_but {
     display: inline-grid !important;
     place-items: center !important;
     flex: 0 0 38px !important;
+}
+
+html body.ntu-enabled #form_sheld #send_form #send_but {
+    border-radius: 50% !important;
+    background: var(--ntu-accent) !important;
+    color: var(--ntu-bg) !important;
+}
+
+/* ChatGPT-style floating composer: independent of chat document height and
+   anchored above the Android/iOS visual keyboard. */
+html body.ntu-enabled #form_sheld {
+    box-sizing: border-box !important;
+    position: fixed !important;
+    inset: auto 0 calc(8px + env(safe-area-inset-bottom) + var(--ntu-keyboard-offset)) 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 6px !important;
+    background: transparent !important;
+    z-index: 100 !important;
 }
 
 /* Novel-reader interaction: a short tap on non-interactive chat content
@@ -959,7 +999,7 @@ html body.ntu-enabled.ntu-chrome-hidden #top-settings-holder {
     transform: translateY(-10px) !important;
 }
 
-html body.ntu-enabled.ntu-chrome-hidden #form_sheld {
+html body.ntu-enabled.ntu-chrome-hidden:not(.ntu-composer-active) #form_sheld {
     opacity: 0 !important;
     visibility: hidden !important;
     pointer-events: none !important;
