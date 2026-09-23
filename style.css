@@ -224,17 +224,6 @@ body.ntu-enabled #chat .ntu-meta-stats {
     gap: 5px 9px;
 }
 
-body.ntu-enabled #chat .ntu-actions {
-    margin-left: auto;
-    display: flex;
-    align-items: center;
-    flex: 0 0 auto;
-}
-
-body.ntu-enabled #chat .ntu-actions .mes_buttons {
-    gap: 4px;
-}
-
 body.ntu-enabled #chat .ntu-meta-item:first-of-type {
     color: var(--ntu-accent);
 }
@@ -860,8 +849,22 @@ html body.ntu-enabled #sheld #chat .mes {
 }
 
 html body.ntu-enabled #sheld #chat .mes > .mesAvatarWrapper,
-html body.ntu-enabled #sheld #chat .mes .mesAvatarWrapper,
+html body.ntu-enabled #sheld #chat .mes .mesAvatarWrapper {
+    display: none !important;
+}
+
 html body.ntu-enabled #sheld #chat .mes .ch_name {
+    display: flex !important;
+    min-height: 0 !important;
+    margin: 0 0 4px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+}
+
+html body.ntu-enabled #sheld #chat .mes .ch_name > :not(.mes_buttons):not(.mes_edit_buttons) {
     display: none !important;
 }
 
