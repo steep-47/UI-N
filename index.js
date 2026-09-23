@@ -1,6 +1,6 @@
 const MODULE_NAME = 'ui_n';
 const ROOT_CLASS = 'ntu-enabled';
-const VERSION = '0.5.9';
+const VERSION = '0.5.10';
 
 const defaults = {
     enabled: true,
@@ -19,9 +19,9 @@ let pointerStart = null;
 let composerBound = false;
 let composerLayout = null;
 let composerTouch = null;
-let chatTouch = null;
 let composerResizeObserver = null;
 let revealTimers = [];
+let composerRevealSuppressed = false;
 
 function revealComposerContext() {
     if (!document.body.classList.contains('ntu-composer-active')) return;
@@ -31,6 +31,7 @@ function revealComposerContext() {
 }
 
 function scheduleComposerReveal() {
+    if (composerRevealSuppressed) return;
     revealTimers.forEach(clearTimeout);
     revealTimers = [0, 80, 180, 360].map((delay) => setTimeout(revealComposerContext, delay));
 }
@@ -49,10 +50,14 @@ function ensureChatBuffer() {
 
 function syncComposerClearance() {
     const form = document.getElementById('send_form');
-    const visible = document.body.classList.contains('ntu-composer-active')
-        || !document.body.classList.contains('ntu-chrome-hidden');
+    const active = document.body.classList.contains('ntu-composer-active');
+    const visible = active || !document.body.classList.contains('ntu-chrome-hidden');
     const height = visible && form ? form.getBoundingClientRect().height : 0;
-    const clearance = visible ? Math.ceil(height + 82) : 44;
+
+    /* The composer is part of the native flex column while the keyboard is
+       open, so it no longer needs a second composer-sized blank region inside
+       the chat. Keep only a small reading buffer there. */
+    const clearance = active ? 52 : visible ? Math.ceil(height + 18) : 24;
     document.documentElement.style.setProperty('--ntu-composer-clearance', `${clearance}px`);
 }
 
@@ -195,6 +200,7 @@ function bindComposerBehavior() {
     document.addEventListener('focusin', (event) => {
         if (event.target?.id !== 'send_textarea') return;
         document.body.classList.add('ntu-composer-active');
+        composerRevealSuppressed = false;
         updateViewport();
         requestAnimationFrame(() => {
             syncComposerHeight(event.target);
@@ -207,6 +213,9 @@ function bindComposerBehavior() {
         if (event.target?.id !== 'send_textarea') return;
         setTimeout(() => {
             document.body.classList.remove('ntu-composer-active');
+            composerRevealSuppressed = false;
+            revealTimers.forEach(clearTimeout);
+            revealTimers = [];
             syncComposerClearance();
         }, 0);
     });
@@ -244,36 +253,18 @@ function bindComposerBehavior() {
     document.addEventListener('touchend', endComposerTouch, { capture: true, passive: true });
     document.addEventListener('touchcancel', endComposerTouch, { capture: true, passive: true });
 
-    /* Some mobile SillyTavern builds cancel native scrolling while a textarea
-       is focused. Manually scroll the chat after a real drag, while preserving
-       taps on choices and controls. */
-    document.addEventListener('touchstart', (event) => {
-        if (!document.body.classList.contains('ntu-composer-active') || event.touches.length !== 1) return;
-        const chat = event.target?.closest?.('#chat');
-        if (!chat || event.target.closest('button, input, textarea, select, a, [contenteditable="true"]')) return;
-        chatTouch = {
-            chat,
-            y: event.touches[0].clientY,
-            scrollTop: chat.scrollTop,
-            dragging: false,
-        };
+    /* Keep chat scrolling native. Capturing touchmove and assigning scrollTop
+       removes Android's inertial scrolling and makes the page feel resistant.
+       A touch only cancels the temporary focus-time auto positioning. */
+    const stopComposerReveal = (event) => {
+        if (!document.body.classList.contains('ntu-composer-active')) return;
+        if (!event.target?.closest?.('#chat')) return;
+        composerRevealSuppressed = true;
         revealTimers.forEach(clearTimeout);
         revealTimers = [];
-    }, { capture: true, passive: true });
-
-    document.addEventListener('touchmove', (event) => {
-        if (!chatTouch || event.touches.length !== 1) return;
-        const delta = chatTouch.y - event.touches[0].clientY;
-        if (!chatTouch.dragging && Math.abs(delta) < 6) return;
-        chatTouch.dragging = true;
-        chatTouch.chat.scrollTop = chatTouch.scrollTop + delta;
-        event.stopPropagation();
-        event.preventDefault();
-    }, { capture: true, passive: false });
-
-    const endChatTouch = () => { chatTouch = null; };
-    document.addEventListener('touchend', endChatTouch, { capture: true, passive: true });
-    document.addEventListener('touchcancel', endChatTouch, { capture: true, passive: true });
+    };
+    document.addEventListener('touchstart', stopComposerReveal, { capture: true, passive: true });
+    document.addEventListener('pointerdown', stopComposerReveal, { capture: true, passive: true });
     updateViewport();
 }
 
