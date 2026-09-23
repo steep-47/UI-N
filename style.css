@@ -124,9 +124,11 @@ body.ntu-enabled.ntu-composer-active #chat {
     max-height: none !important;
     flex: 1 1 auto !important;
     overflow-y: auto !important;
-    overscroll-behavior-y: contain !important;
+    overscroll-behavior-y: auto !important;
     -webkit-overflow-scrolling: touch !important;
     touch-action: pan-y !important;
+    scroll-behavior: auto !important;
+    scroll-snap-type: none !important;
 }
 
 body.ntu-enabled #chat #ntu_chat_buffer {
@@ -137,6 +139,7 @@ body.ntu-enabled #chat #ntu_chat_buffer {
     flex: 0 0 var(--ntu-composer-clearance) !important;
     display: block !important;
     pointer-events: none !important;
+    overflow-anchor: none !important;
     background: transparent !important;
 }
 
