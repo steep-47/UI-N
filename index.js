@@ -1,6 +1,6 @@
 const MODULE_NAME = 'ui_n';
 const ROOT_CLASS = 'ntu-enabled';
-const VERSION = '0.5.4';
+const VERSION = '0.5.5';
 
 const defaults = {
     enabled: true,
@@ -19,6 +19,16 @@ let pointerStart = null;
 let composerBound = false;
 let composerLayout = null;
 let composerTouch = null;
+let composerResizeObserver = null;
+
+function syncComposerClearance() {
+    const form = document.getElementById('send_form');
+    const visible = document.body.classList.contains('ntu-composer-active')
+        || !document.body.classList.contains('ntu-chrome-hidden');
+    const height = visible && form ? form.getBoundingClientRect().height : 0;
+    const clearance = visible ? Math.ceil(height + 82) : 44;
+    document.documentElement.style.setProperty('--ntu-composer-clearance', `${clearance}px`);
+}
 
 function syncComposerHeight(textarea = document.getElementById('send_textarea')) {
     if (!(textarea instanceof HTMLTextAreaElement) || !document.body.classList.contains(ROOT_CLASS)) return;
@@ -31,6 +41,7 @@ function syncComposerHeight(textarea = document.getElementById('send_textarea'))
     const desired = Math.max(38, Math.min(textarea.scrollHeight, maximum));
     textarea.style.setProperty('height', `${Math.ceil(desired)}px`, 'important');
     textarea.style.setProperty('overflow-y', textarea.scrollHeight > maximum + 1 ? 'auto' : 'hidden', 'important');
+    requestAnimationFrame(syncComposerClearance);
 }
 
 function context() {
@@ -122,6 +133,7 @@ function bindReadingTap() {
         }
         if (chromeHidden) document.body.classList.remove('ntu-composer-active');
         document.body.classList.toggle('ntu-chrome-hidden', chromeHidden);
+        requestAnimationFrame(syncComposerClearance);
     }, { passive: true });
 
     document.addEventListener('pointercancel', () => { pointerStart = null; }, { passive: true });
@@ -137,7 +149,10 @@ function bindComposerBehavior() {
             ? Math.max(0, globalThis.innerHeight - viewport.height - viewport.offsetTop)
             : 0;
         document.documentElement.style.setProperty('--ntu-keyboard-offset', `${covered}px`);
-        requestAnimationFrame(() => syncComposerHeight());
+        requestAnimationFrame(() => {
+            syncComposerHeight();
+            syncComposerClearance();
+        });
     };
 
     document.addEventListener('input', (event) => {
@@ -152,12 +167,18 @@ function bindComposerBehavior() {
         if (event.target?.id !== 'send_textarea') return;
         document.body.classList.add('ntu-composer-active');
         updateViewport();
-        requestAnimationFrame(() => syncComposerHeight(event.target));
+        requestAnimationFrame(() => {
+            syncComposerHeight(event.target);
+            syncComposerClearance();
+        });
     });
 
     document.addEventListener('focusout', (event) => {
         if (event.target?.id !== 'send_textarea') return;
-        setTimeout(() => document.body.classList.remove('ntu-composer-active'), 0);
+        setTimeout(() => {
+            document.body.classList.remove('ntu-composer-active');
+            syncComposerClearance();
+        }, 0);
     });
 
     globalThis.visualViewport?.addEventListener('resize', updateViewport, { passive: true });
@@ -225,11 +246,19 @@ function ensureComposerLayout() {
     shell.append(textSlot, tools);
     form.prepend(shell);
     composerLayout = { shell, moves };
-    requestAnimationFrame(() => syncComposerHeight(textarea));
+    composerResizeObserver?.disconnect();
+    composerResizeObserver = new ResizeObserver(syncComposerClearance);
+    composerResizeObserver.observe(form);
+    requestAnimationFrame(() => {
+        syncComposerHeight(textarea);
+        syncComposerClearance();
+    });
 }
 
 function restoreComposerLayout() {
     if (!composerLayout) return;
+    composerResizeObserver?.disconnect();
+    composerResizeObserver = null;
     for (const { node, marker } of composerLayout.moves) {
         if (marker.isConnected) marker.before(node);
         marker.remove();
