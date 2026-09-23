@@ -243,41 +243,28 @@ body.ntu-enabled #chat .ntu-meta-dot {
     color: var(--ntu-faint);
 }
 
+/* Keep SillyTavern's native message action visibility, positioning and
+   menu behavior. UI-N only recolors controls that upstream already shows. */
 body.ntu-enabled #chat .mes_buttons {
-    position: static !important;
-    display: flex !important;
-    opacity: 1 !important;
-    visibility: visible !important;
     filter: none !important;
     color: var(--ntu-text) !important;
-    z-index: 2;
 }
 
 body.ntu-enabled #chat .mes_edit_buttons {
     color: var(--ntu-muted) !important;
     filter: none !important;
-    z-index: 2;
 }
 
 body.ntu-enabled #chat .mes_button,
 body.ntu-enabled #chat .mes_edit_buttons > * {
-    min-width: 34px;
-    min-height: 34px;
-    display: inline-grid !important;
-    place-items: center;
-    border-radius: 10px;
     color: var(--ntu-text) !important;
-    background: color-mix(in srgb, var(--ntu-panel) 72%, transparent) !important;
-    border: 1px solid var(--ntu-border) !important;
     box-shadow: none !important;
-    opacity: .92 !important;
     text-shadow: none !important;
 }
 
 body.ntu-enabled #chat .mes_button:hover,
 body.ntu-enabled #chat .mes_edit_buttons > *:hover {
     color: var(--ntu-strong) !important;
-    background: var(--ntu-panel) !important;
 }
 
 body.ntu-enabled #chat .swipes-counter,
@@ -1378,34 +1365,8 @@ html body.ntu-enabled #sheld #chat .mes .ntu-meta-dot {
     opacity: .52 !important;
 }
 
-/* Action icons stay available, but no longer look like three heavy cards. */
-html body.ntu-enabled #sheld #chat .ntu-actions .mes_buttons {
-    gap: 3px !important;
-}
-
-html body.ntu-enabled #sheld #chat .ntu-actions .mes_button,
-html body.ntu-enabled #sheld #chat .ntu-actions .mes_edit_buttons > * {
-    min-width: 29px !important;
-    width: 29px !important;
-    min-height: 29px !important;
-    height: 29px !important;
-    padding: 0 !important;
-    border-radius: 8px !important;
-    background: transparent !important;
-    border: 1px solid transparent !important;
-    color: var(--ntu-muted) !important;
-    opacity: .78 !important;
-}
-
-html body.ntu-enabled #sheld #chat .ntu-actions .mes_button:hover,
-html body.ntu-enabled #sheld #chat .ntu-actions .mes_button:active,
-html body.ntu-enabled #sheld #chat .ntu-actions .mes_edit_buttons > *:hover,
-html body.ntu-enabled #sheld #chat .ntu-actions .mes_edit_buttons > *:active {
-    background: color-mix(in srgb, var(--ntu-panel) 62%, transparent) !important;
-    border-color: color-mix(in srgb, var(--ntu-border) 72%, transparent) !important;
-    color: var(--ntu-strong) !important;
-    opacity: 1 !important;
-}
+/* Native message action buttons are intentionally left in SillyTavern's own
+   structure. UI-N does not add, move, reveal or replace them. */
 
 /* User input becomes a compact annotation instead of a full-width content card. */
 html body.ntu-enabled.ntu-compact-user #sheld #chat .mes[is_user="true"] {
