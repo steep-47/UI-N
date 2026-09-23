@@ -3,6 +3,7 @@
     --ntu-line-height: 1.95;
     --ntu-side-padding: 24px;
     --ntu-keyboard-offset: 0px;
+    --ntu-visual-height: 100dvh;
     --ntu-composer-clearance: 126px;
     --ntu-bg: #1f201e;
     --ntu-panel: #262724;
@@ -104,6 +105,20 @@ body.ntu-enabled #chat {
     box-shadow: none !important;
     backdrop-filter: none !important;
     color: var(--ntu-text) !important;
+}
+
+/* The Android layout viewport remains full-height behind the software
+   keyboard. While editing, use the visual viewport instead so the chat's
+   scrollable bottom and its buffer stay above the keyboard. */
+body.ntu-enabled.ntu-composer-active #chat {
+    box-sizing: border-box !important;
+    height: var(--ntu-visual-height) !important;
+    min-height: 0 !important;
+    max-height: var(--ntu-visual-height) !important;
+    flex: 0 0 var(--ntu-visual-height) !important;
+    overflow-y: auto !important;
+    overscroll-behavior-y: contain !important;
+    -webkit-overflow-scrolling: touch !important;
 }
 
 body.ntu-enabled #chat .mes {
