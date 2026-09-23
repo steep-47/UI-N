@@ -18,6 +18,13 @@
     --ntu-shadow: rgba(0, 0, 0, .28);
     --ntu-menu-text: #aaa7a0;
     --ntu-menu-icon: #918e87;
+    --ntu-secondary-font-size: calc(var(--ntu-font-size) * .80);
+    --ntu-user-line-height: 1.60;
+    --ntu-reasoning-line-height: 1.72;
+    --ntu-composer-font-size: 18px;
+    --ntu-composer-line-height: 1.45;
+    --ntu-reasoning-text: #7f7d77;
+    --ntu-reasoning-strong: #bdbab3;
 }
 
 body[data-ntu-theme="light"] {
@@ -34,6 +41,8 @@ body[data-ntu-theme="light"] {
     --ntu-shadow: rgba(70, 62, 50, .13);
     --ntu-menu-text: #625e57;
     --ntu-menu-icon: #77736c;
+    --ntu-reasoning-text: #8b867e;
+    --ntu-reasoning-strong: #555048;
 }
 
 body[data-ntu-theme="dark"] {
@@ -67,6 +76,8 @@ body[data-ntu-theme="dark"] {
         --ntu-shadow: rgba(70, 62, 50, .13);
         --ntu-menu-text: #625e57;
         --ntu-menu-icon: #77736c;
+        --ntu-reasoning-text: #8b867e;
+        --ntu-reasoning-strong: #555048;
     }
 }
 
@@ -85,6 +96,8 @@ body[data-ntu-theme="dark"] {
         --ntu-shadow: rgba(0, 0, 0, .28);
         --ntu-menu-text: #aaa7a0;
         --ntu-menu-icon: #918e87;
+        --ntu-reasoning-text: #7f7d77;
+        --ntu-reasoning-strong: #bdbab3;
     }
 }
 
@@ -269,28 +282,6 @@ body.ntu-enabled #chat .swipe_left,
 body.ntu-enabled #chat .swipe_right {
     background: color-mix(in srgb, var(--ntu-panel) 72%, transparent) !important;
     border-radius: 10px;
-}
-
-body.ntu-enabled.ntu-compact-user #chat .mes[is_user="true"] {
-    margin-top: 10px !important;
-    padding-bottom: 14px !important;
-}
-
-body.ntu-enabled.ntu-compact-user #chat .mes[is_user="true"] .mes_text {
-    padding: 10px 13px !important;
-    border-left: 2px solid var(--ntu-faint);
-    border-radius: 0 8px 8px 0;
-    background: color-mix(in srgb, var(--ntu-panel) 58%, transparent) !important;
-    color: var(--ntu-muted) !important;
-    font-family: system-ui, -apple-system, "Segoe UI", sans-serif !important;
-    font-size: calc(var(--ntu-font-size) * .80) !important;
-    line-height: 1.60 !important;
-    letter-spacing: 0;
-}
-
-body.ntu-enabled.ntu-compact-user #chat .mes[is_user="true"] .mes_text p {
-    margin: 0 !important;
-    text-indent: 0;
 }
 
 body.ntu-enabled #send_form {
@@ -600,15 +591,6 @@ html body.ntu-enabled #completion_prompt_manager .completion_prompt_manager_prom
 html body.ntu-enabled #completion_prompt_manager .prompt-manager-inspect-action,
 html body.ntu-enabled #completion_prompt_manager .prompt_manager_prompt_tokens {
     color: inherit !important;
-}
-
-html body.ntu-enabled #chat .mes_reasoning_summary,
-html body.ntu-enabled #chat .mes_reasoning_header {
-    background-color: var(--ntu-panel) !important;
-    background-image: none !important;
-    color: var(--ntu-strong) !important;
-    border-color: var(--ntu-border) !important;
-    box-shadow: none !important;
 }
 
 html body.ntu-enabled #bg_menu_content,
@@ -999,8 +981,8 @@ html body.ntu-enabled #form_sheld #send_form #send_textarea {
     display: block !important;
     flex: 1 1 auto !important;
     font-family: system-ui, -apple-system, "Segoe UI", sans-serif !important;
-    font-size: 18px !important;
-    line-height: 1.45 !important;
+    font-size: var(--ntu-composer-font-size) !important;
+    line-height: var(--ntu-composer-line-height) !important;
     resize: none !important;
     overflow-y: hidden !important;
     overscroll-behavior: contain !important;
@@ -1392,9 +1374,9 @@ html body.ntu-enabled.ntu-compact-user #sheld #chat .mes[is_user="true"] .mes_te
     background: color-mix(in srgb, var(--ntu-panel) 34%, transparent) !important;
     color: var(--ntu-muted) !important;
     font-family: system-ui, -apple-system, "Segoe UI", sans-serif !important;
-    font-size: calc(var(--ntu-font-size) * .80) !important;
+    font-size: var(--ntu-secondary-font-size) !important;
     font-weight: 400 !important;
-    line-height: 1.60 !important;
+    line-height: var(--ntu-user-line-height) !important;
     letter-spacing: 0 !important;
 }
 
@@ -1447,47 +1429,12 @@ html body.ntu-enabled #sheld #chat .mes_reasoning {
     border-radius: 0 !important;
     background: transparent !important;
     color: var(--ntu-muted) !important;
-    font-size: calc(var(--ntu-font-size) * .80) !important;
-    line-height: 1.72 !important;
+    font-size: var(--ntu-secondary-font-size) !important;
+    line-height: var(--ntu-reasoning-line-height) !important;
     box-shadow: none !important;
 }
 
-/* =========================================================
- * v0.5.37 — two-tone reasoning typography + readable size
- * Preserve the two distinct text colors seen in the reference:
- * normal reasoning copy and emphasized/key phrases.
- * ========================================================= */
-
-:root {
-    --ntu-reasoning-text: #7f7d77;
-    --ntu-reasoning-strong: #bdbab3;
-}
-
-body[data-ntu-theme="light"] {
-    --ntu-reasoning-text: #8b867e;
-    --ntu-reasoning-strong: #555048;
-}
-
-body[data-ntu-theme="dark"] {
-    --ntu-reasoning-text: #7f7d77;
-    --ntu-reasoning-strong: #bdbab3;
-}
-
-@media (prefers-color-scheme: light) {
-    body[data-ntu-theme="auto"] {
-        --ntu-reasoning-text: #8b867e;
-        --ntu-reasoning-strong: #555048;
-    }
-}
-
-@media (prefers-color-scheme: dark) {
-    body[data-ntu-theme="auto"] {
-        --ntu-reasoning-text: #7f7d77;
-        --ntu-reasoning-strong: #bdbab3;
-    }
-}
-
-/* Normal reasoning text uses the softer tone. */
+/* Secondary text hierarchy: reasoning uses one softer tone plus one emphasis tone. */
 html body.ntu-enabled #sheld #chat .mes_reasoning,
 html body.ntu-enabled #sheld #chat .mes_reasoning p,
 html body.ntu-enabled #sheld #chat .mes_reasoning li,
@@ -1498,7 +1445,6 @@ html body.ntu-enabled #sheld #chat .mes_reasoning i {
     font-weight: 400 !important;
 }
 
-/* Strong/key phrases keep their own second color and a moderate heavier weight. */
 html body.ntu-enabled #sheld #chat .mes_reasoning strong,
 html body.ntu-enabled #sheld #chat .mes_reasoning b {
     color: var(--ntu-reasoning-strong) !important;
