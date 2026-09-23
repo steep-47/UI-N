@@ -1,6 +1,6 @@
 const MODULE_NAME = 'ui_n';
 const ROOT_CLASS = 'ntu-enabled';
-const VERSION = '0.5.24';
+const VERSION = '0.5.25';
 
 const defaults = {
     enabled: true,
