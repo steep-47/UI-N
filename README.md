@@ -24,6 +24,12 @@
 
 插件读取 SillyTavern 原生的消息层数、计时和 Token 显示节点，并尝试识别包含“缓存命中”的状态节点。不同版本的 Memo-N 若使用了其他 DOM 类名，缓存数据仍可能需要一次针对性适配。
 
+### 0.5.25 修复正文被旧宋体规则覆盖
+
+- 定位到正文实际仍显示宋体的原因：后面的高优先级 `#sheld #chat .mes .mes_text` 规则仍强制使用 Noto Serif / Source Han Serif
+- 将该最终覆盖规则同步改为思源黑体 / Noto Sans CJK，并保留参考图的 400 字重、2.05 行高与 .018em 字距
+- 仅修改正文文字配置，其他 UI、布局、输入栏、世界书和功能逻辑不动
+
 ### 0.5.24 思源黑体正文排版
 
 - 正文字体改为思源黑体优先：Source Han Sans SC / Noto Sans CJK SC / Noto Sans SC
