@@ -1,12 +1,12 @@
 const MODULE_NAME = 'ui_n';
 const ROOT_CLASS = 'ntu-enabled';
-const VERSION = '0.5.25';
+const VERSION = '0.5.26';
 
 const defaults = {
     enabled: true,
     theme: 'auto',
-    fontSize: 19,
-    lineHeight: 1.95,
+    fontSize: 23,
+    lineHeight: 2.05,
     sidePadding: 24,
     compactUser: true,
     tapChrome: true,
@@ -83,6 +83,14 @@ function settings() {
     const ctx = context();
     if (!ctx) return structuredClone(defaults);
     const saved = ctx.extensionSettings[MODULE_NAME] || {};
+
+    /* v0.5.26: the reference layout uses visibly larger type. Migrate only the
+       untouched legacy defaults; preserve any typography the user changed. */
+    if (saved.fontSize === 19 && saved.lineHeight === 1.95 && saved.sidePadding === 24) {
+        saved.fontSize = 23;
+        saved.lineHeight = 2.05;
+    }
+
     ctx.extensionSettings[MODULE_NAME] = Object.assign(structuredClone(defaults), saved);
     return ctx.extensionSettings[MODULE_NAME];
 }
