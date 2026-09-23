@@ -1291,6 +1291,34 @@ html body.ntu-enabled .select2-container .select2-search__field::placeholder {
     opacity: 1 !important;
 }
 
+/* Select2's inline search is a textarea. UI-N's generic textarea styling can
+   otherwise turn it into an extra blank row on mobile/TauriTavern. Keep every
+   inline Select2 search field one-line and visually transparent. */
+html body.ntu-enabled .select2-container .select2-search--inline {
+    margin: 0 !important;
+    padding: 0 !important;
+    min-height: 28px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    vertical-align: middle !important;
+}
+
+html body.ntu-enabled .select2-container .select2-search--inline textarea.select2-search__field {
+    box-sizing: border-box !important;
+    height: 28px !important;
+    min-height: 28px !important;
+    max-height: 28px !important;
+    margin: 0 !important;
+    padding: 3px 2px !important;
+    line-height: 22px !important;
+    overflow: hidden !important;
+    resize: none !important;
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+
 html body.ntu-enabled .select2-container .select2-selection--multiple .select2-selection__choice {
     border: 1px solid var(--ntu-border) !important;
     border-radius: 7px !important;
@@ -1370,7 +1398,7 @@ html body.ntu-enabled #world_info ~ .select2-container .select2-selection--multi
     box-sizing: border-box !important;
     width: 100% !important;
     height: auto !important;
-    min-height: 40px !important;
+    min-height: 38px !important;
     max-height: none !important;
     margin: 0 !important;
     padding: 4px 8px !important;
@@ -1444,3 +1472,11 @@ html body.ntu-enabled #world_popup .world_set {
     text-shadow: none !important;
 }
 
+
+/* TauriTavern may wrap the original #world_info select before injecting
+   Select2, so the sibling selector above is not always reached. This fallback
+   only constrains empty/multi-select row height inside the World Info panel. */
+html body.ntu-enabled #world_popup .select2-selection--multiple {
+    min-height: 38px !important;
+    height: auto !important;
+}
