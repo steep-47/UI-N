@@ -913,7 +913,7 @@ html body.ntu-enabled #form_sheld #send_form #send_textarea {
     min-width: 0 !important;
     height: auto !important;
     min-height: 38px !important;
-    max-height: 40vh !important;
+    max-height: min(22dvh, 132px) !important;
     margin: 0 !important;
     padding: 7px 5px !important;
     display: block !important;
@@ -922,6 +922,11 @@ html body.ntu-enabled #form_sheld #send_form #send_textarea {
     font-size: 16px !important;
     line-height: 1.45 !important;
     resize: none !important;
+    overflow-y: auto !important;
+}
+
+html body.ntu-enabled #form_sheld #send_form #send_textarea:not(:focus) {
+    max-height: 58px !important;
 }
 
 html body.ntu-enabled #form_sheld #send_form .menu_button,
@@ -959,6 +964,13 @@ html body.ntu-enabled.ntu-chrome-hidden #form_sheld {
     visibility: hidden !important;
     pointer-events: none !important;
     transform: translateY(12px) !important;
+    box-sizing: border-box !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    max-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
