@@ -1,6 +1,6 @@
 const MODULE_NAME = 'ui_n';
 const ROOT_CLASS = 'ntu-enabled';
-const VERSION = '0.4.1';
+const VERSION = '0.4.2';
 
 const defaults = {
     enabled: true,
@@ -67,12 +67,22 @@ function applyAppearance() {
 
 function isInteractiveTarget(target) {
     if (!(target instanceof Element)) return true;
-    return Boolean(target.closest([
+    if (target.closest([
         'a', 'button', 'input', 'textarea', 'select', 'label',
-        '[contenteditable="true"]', '[role="button"]', '.interactable',
+        '[contenteditable="true"]', '[role="button"]', '[onclick]', '[tabindex]', '.interactable',
         '.mes_buttons', '.mes_edit_buttons', '.ntu-actions',
         '.swipe_left', '.swipe_right', '.popup', '#options', '#extensionsMenu',
-    ].join(',')));
+    ].join(','))) return true;
+
+    /* Choice cards from extensions are often clickable divs without semantic
+       button markup. Respect their pointer cursor so a choice click never also
+       toggles reader chrome. */
+    let node = target;
+    while (node && node.id !== 'chat') {
+        if (globalThis.getComputedStyle?.(node).cursor === 'pointer') return true;
+        node = node.parentElement;
+    }
+    return false;
 }
 
 function bindReadingTap() {
