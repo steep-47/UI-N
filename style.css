@@ -283,8 +283,8 @@ body.ntu-enabled.ntu-compact-user #chat .mes[is_user="true"] .mes_text {
     background: color-mix(in srgb, var(--ntu-panel) 58%, transparent) !important;
     color: var(--ntu-muted) !important;
     font-family: system-ui, -apple-system, "Segoe UI", sans-serif !important;
-    font-size: calc(var(--ntu-font-size) * .78) !important;
-    line-height: 1.65 !important;
+    font-size: calc(var(--ntu-font-size) * .80) !important;
+    line-height: 1.60 !important;
     letter-spacing: 0;
 }
 
@@ -999,8 +999,8 @@ html body.ntu-enabled #form_sheld #send_form #send_textarea {
     display: block !important;
     flex: 1 1 auto !important;
     font-family: system-ui, -apple-system, "Segoe UI", sans-serif !important;
-    font-size: 15.5px !important;
-    line-height: 1.42 !important;
+    font-size: 18px !important;
+    line-height: 1.45 !important;
     resize: none !important;
     overflow-y: hidden !important;
     overscroll-behavior: contain !important;
@@ -1392,9 +1392,9 @@ html body.ntu-enabled.ntu-compact-user #sheld #chat .mes[is_user="true"] .mes_te
     background: color-mix(in srgb, var(--ntu-panel) 34%, transparent) !important;
     color: var(--ntu-muted) !important;
     font-family: system-ui, -apple-system, "Segoe UI", sans-serif !important;
-    font-size: calc(var(--ntu-font-size) * .70) !important;
+    font-size: calc(var(--ntu-font-size) * .80) !important;
     font-weight: 400 !important;
-    line-height: 1.45 !important;
+    line-height: 1.60 !important;
     letter-spacing: 0 !important;
 }
 
