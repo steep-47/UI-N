@@ -897,8 +897,19 @@ html body.ntu-enabled #form_sheld #send_form #rightSendForm {
     gap: 2px !important;
 }
 
+/* Third-party themes may nest the textarea inside either button wrapper.
+   The wrapper that owns it must grow; otherwise pasted option text collapses
+   into a one-character-wide column and makes the composer extremely tall. */
+html body.ntu-enabled #form_sheld #send_form #leftSendForm:has(#send_textarea),
+html body.ntu-enabled #form_sheld #send_form #rightSendForm:has(#send_textarea),
+html body.ntu-enabled #form_sheld #send_form > :has(> #send_textarea) {
+    width: 0 !important;
+    max-width: none !important;
+    flex: 1 1 0 !important;
+}
+
 html body.ntu-enabled #form_sheld #send_form #send_textarea {
-    width: auto !important;
+    width: 0 !important;
     min-width: 0 !important;
     height: auto !important;
     min-height: 38px !important;
