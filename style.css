@@ -370,9 +370,13 @@ html body.ntu-enabled #extensionsMenu #ntu_quick_toggle .ntu-theme-toggle-icon {
 }
 
 .ntu-settings-content {
-    display: grid;
-    gap: 12px;
     padding: 10px 4px;
+}
+
+/* Do not set display on the drawer content. SillyTavern owns that property:
+   collapsed = display:none, expanded = inline display:block. */
+.ntu-settings-content > * + * {
+    margin-top: 12px;
 }
 
 .ntu-setting-row,
