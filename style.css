@@ -1110,3 +1110,18 @@ html body.ntu-enabled.ntu-chrome-hidden:not(.ntu-composer-active) #form_sheld {
         animation: none !important;
     }
 }
+
+/* Opt-N renders its choice panel inside the assistant message, while
+   SillyTavern keeps the swipe counter/arrow pinned to the message bottom.
+   Reserve a dedicated strip below that panel so "1/1 >" never overlaps the
+   hint text. This is scoped to Opt-N messages only to avoid adding blank space
+   to ordinary replies. */
+html body.ntu-enabled #chat .mes:not([is_user="true"]):has(.yiyi-choice-panel) {
+    padding-bottom: 46px !important;
+}
+
+html body.ntu-enabled #chat .mes:not([is_user="true"]):has(.yiyi-choice-panel) .swipes-counter,
+html body.ntu-enabled #chat .mes:not([is_user="true"]):has(.yiyi-choice-panel) .swipe_left,
+html body.ntu-enabled #chat .mes:not([is_user="true"]):has(.yiyi-choice-panel) .swipe_right {
+    z-index: 5 !important;
+}
