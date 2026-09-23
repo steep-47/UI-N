@@ -1,6 +1,7 @@
 const MODULE_NAME = 'ui_n';
 const ROOT_CLASS = 'ntu-enabled';
-const VERSION = '0.5.39';
+const TYPOGRAPHY_PRESET_VERSION = 2;
+const VERSION = '0.5.40';
 
 const defaults = {
     enabled: true,
@@ -10,7 +11,7 @@ const defaults = {
     sidePadding: 24,
     compactUser: true,
     tapChrome: true,
-    typographyPresetVersion: 2,
+    typographyPresetVersion: TYPOGRAPHY_PRESET_VERSION,
 };
 
 let observer;
@@ -86,13 +87,11 @@ function settings() {
     if (!ctx) return structuredClone(defaults);
     const saved = ctx.extensionSettings[MODULE_NAME] || {};
 
-    /* v0.5.29: apply the reference typography once regardless of legacy
-       saved values. Earlier exact-value migrations could be skipped whenever
-       one saved slider differed, leaving 27 / 2.25 active in practice. */
-    if (saved.typographyPresetVersion !== 2) {
-        saved.fontSize = 23;
-        saved.lineHeight = 2.10;
-        saved.typographyPresetVersion = 2;
+    /* One-time migration for installs that predate the current reading preset. */
+    if (saved.typographyPresetVersion !== TYPOGRAPHY_PRESET_VERSION) {
+        saved.fontSize = defaults.fontSize;
+        saved.lineHeight = defaults.lineHeight;
+        saved.typographyPresetVersion = TYPOGRAPHY_PRESET_VERSION;
     }
 
     ctx.extensionSettings[MODULE_NAME] = Object.assign(structuredClone(defaults), saved);
@@ -120,8 +119,7 @@ function applyAppearance() {
     body.style.setProperty('--ntu-side-padding', `${value.sidePadding}px`);
 
     const toggle = document.getElementById('ntu_quick_toggle');
-    toggle?.classList.toggle('ntu-active', Boolean(value.enabled));
-    toggle?.setAttribute('title', resolvedTheme(value.theme) === 'dark' ? '切换到日间主题' : '切换到夜间主题');
+    if (toggle) updateQuickToggleLabel(toggle);
     const enabled = document.getElementById('ntu_enabled');
     if (enabled) enabled.checked = Boolean(value.enabled);
     const theme = document.getElementById('ntu_theme');
@@ -140,7 +138,7 @@ function isInteractiveTarget(target) {
     if (target.closest([
         'a', 'button', 'input', 'textarea', 'select', 'label',
         '[contenteditable="true"]', '[role="button"]', '[onclick]', '[tabindex]', '.interactable',
-        '.mes_buttons', '.mes_edit_buttons', '.ntu-actions',
+        '.mes_buttons', '.mes_edit_buttons',
         '.swipe_left', '.swipe_right', '.popup', '#options', '#extensionsMenu',
     ].join(','))) return true;
 
@@ -369,17 +367,18 @@ function normalizeMetric(text, type) {
     return clean;
 }
 
+function restoreLegacyMessageActions(message) {
+    if (!(message instanceof HTMLElement)) return;
+    const anchor = message.querySelector('.ntu-actions-anchor');
+    const buttons = message.querySelector('.ntu-actions > .mes_buttons');
+    if (anchor && buttons) anchor.after(buttons);
+    anchor?.remove();
+    message.querySelector(':scope > .mes_block > .ntu-meta .ntu-actions')?.remove();
+}
+
 function upsertMeta(message) {
     if (!(message instanceof HTMLElement)) return;
-
-    /* v0.5.32: undo any legacy UI-N relocation first. Native message action
-       buttons must stay in SillyTavern's own DOM position for visibility rules,
-       menus and click handlers to work exactly as upstream expects. */
-    const legacyAnchor = message.querySelector('.ntu-actions-anchor');
-    const legacyButtons = message.querySelector('.ntu-actions > .mes_buttons');
-    if (legacyAnchor && legacyButtons) legacyAnchor.after(legacyButtons);
-    legacyAnchor?.remove();
-    message.querySelector(':scope > .mes_block > .ntu-meta .ntu-actions')?.remove();
+    restoreLegacyMessageActions(message);
 
     let meta = message.querySelector(':scope > .mes_block > .ntu-meta');
     if (!meta) {
@@ -419,10 +418,7 @@ function upsertMeta(message) {
 
 function restoreMessages() {
     document.querySelectorAll('#chat .mes').forEach((message) => {
-        const anchor = message.querySelector('.ntu-actions-anchor');
-        const buttons = message.querySelector('.ntu-actions > .mes_buttons');
-        if (anchor && buttons) anchor.after(buttons);
-        anchor?.remove();
+        restoreLegacyMessageActions(message);
         message.querySelectorAll('[data-ntu-cache-source]').forEach((item) => delete item.dataset.ntuCacheSource);
         message.querySelector(':scope > .mes_block > .ntu-meta')?.remove();
     });
