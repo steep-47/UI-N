@@ -24,6 +24,13 @@
 
 插件读取 SillyTavern 原生的消息层数、计时和 Token 显示节点，并尝试识别包含“缓存命中”的状态节点。不同版本的 Memo-N 若使用了其他 DOM 类名，缓存数据仍可能需要一次针对性适配。
 
+### 0.5.16 世界书布局恢复原版
+
+- 确认空白高度由 UI-N 对 Select2 / 世界书布局的覆盖引入，原版 TauriTavern 2.3.0 本身没有该问题
+- 删除 0.5.13–0.5.15 对世界书选择器的高度、宽度、padding、display、flex、overflow 等布局接管
+- Select2 恢复完全使用 TauriTavern / SillyTavern 原生布局，只保留 UI-N 的颜色覆盖
+- 将 Select2 内联搜索框排除出 UI-N 通用 textarea 样式，避免再次改变原控件尺寸
+
 ### 0.5.15 TauriTavern 世界书空白行修正
 
 - 定位到 TauriTavern 2.3.0 的移动端布局：`#wiTopBlock` 改成纵向后，`#WIMultiSelector` 仍保留 `.flex1 { flex: 1 }`
@@ -172,7 +179,7 @@
 - 上下滑动、选择文字及点击链接、选项或消息按钮时不会误触切换
 - 操作栏显隐不改变正文滚动位置，消息统计与右侧菜单、旗帜、编辑按钮始终保留
 
-当前版本：0.5.15
+当前版本：0.5.16
 
 ## License
 
