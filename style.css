@@ -1460,3 +1460,12 @@ html body.ntu-enabled #sheld #chat .mes_reasoning {
     border-left-color: color-mix(in srgb, var(--ntu-reasoning-text) 54%, transparent) !important;
 }
 
+
+/* TauriTavern derives @owner from the managed Git remote, not manifest.author.
+   Hide that derived owner only on UI-N's own extension-manager row. */
+.extension_block[data-name="/UI-N"] .extension_author,
+.extension_block[data-name^="/UI-N@"] .extension_author,
+.extension_block[data-name="UI-N"] .extension_author,
+.extension_block[data-name^="UI-N@"] .extension_author {
+    display: none !important;
+}
