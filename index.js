@@ -1,6 +1,6 @@
 const MODULE_NAME = 'ui_n';
 const ROOT_CLASS = 'ntu-enabled';
-const VERSION = '0.5.31';
+const VERSION = '0.5.32';
 
 const defaults = {
     enabled: true,
@@ -370,26 +370,26 @@ function normalizeMetric(text, type) {
 
 function upsertMeta(message) {
     if (!(message instanceof HTMLElement)) return;
+
+    /* v0.5.32: undo any legacy UI-N relocation first. Native message action
+       buttons must stay in SillyTavern's own DOM position for visibility rules,
+       menus and click handlers to work exactly as upstream expects. */
+    const legacyAnchor = message.querySelector('.ntu-actions-anchor');
+    const legacyButtons = message.querySelector('.ntu-actions > .mes_buttons');
+    if (legacyAnchor && legacyButtons) legacyAnchor.after(legacyButtons);
+    legacyAnchor?.remove();
+    message.querySelector(':scope > .mes_block > .ntu-meta .ntu-actions')?.remove();
+
     let meta = message.querySelector(':scope > .mes_block > .ntu-meta');
     if (!meta) {
         meta = document.createElement('div');
         meta.className = 'ntu-meta';
         meta.setAttribute('aria-label', '本条回复数据');
-        meta.innerHTML = '<div class="ntu-meta-stats"></div><div class="ntu-actions"></div>';
+        meta.innerHTML = '<div class="ntu-meta-stats"></div>';
         message.querySelector(':scope > .mes_block')?.prepend(meta);
     }
 
     const stats = meta.querySelector('.ntu-meta-stats');
-    const actions = meta.querySelector('.ntu-actions');
-    const buttons = message.querySelector('.mes_buttons:not(.ntu-actions .mes_buttons)');
-    if (buttons && actions) {
-        const anchor = document.createElement('span');
-        anchor.className = 'ntu-actions-anchor';
-        anchor.hidden = true;
-        buttons.before(anchor);
-        actions.append(buttons);
-    }
-
     const values = [
         normalizeMetric(textOf(message.querySelector('.mesIDDisplay')), 'layer'),
         normalizeMetric(findCacheText(message), 'cache'),
