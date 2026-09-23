@@ -589,6 +589,50 @@ html body.ntu-enabled .backgrounds_menu {
     color: var(--ntu-text) !important;
 }
 
+/* Bottom-bar pop-up menus are separate from normal dialogs. Keep both the
+   native options menu and extension menu on the active UI-N palette. */
+html body.ntu-enabled #options,
+html body.ntu-enabled #extensionsMenu,
+html body.ntu-enabled .popup .popper-modal {
+    background: var(--ntu-elevated) !important;
+    color: var(--ntu-strong) !important;
+    border: 1px solid var(--ntu-border) !important;
+    box-shadow: 0 10px 28px var(--ntu-shadow) !important;
+    text-shadow: none !important;
+    filter: none !important;
+}
+
+html body.ntu-enabled #options a,
+html body.ntu-enabled #options > div,
+html body.ntu-enabled #extensionsMenu > div,
+html body.ntu-enabled #extensionsMenu .extension_container,
+html body.ntu-enabled #extensionsMenu .extensionsMenuExtensionButton,
+html body.ntu-enabled .popup .popper-modal > * {
+    background: transparent !important;
+    color: var(--ntu-strong) !important;
+    border-color: var(--ntu-border) !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+}
+
+html body.ntu-enabled #options a:hover,
+html body.ntu-enabled #options > div:hover,
+html body.ntu-enabled #extensionsMenu > div:hover,
+html body.ntu-enabled #extensionsMenu .extensionsMenuExtensionButton:hover,
+html body.ntu-enabled .popup .popper-modal > *:hover {
+    background: var(--ntu-panel) !important;
+    color: var(--ntu-strong) !important;
+}
+
+html body.ntu-enabled #options i,
+html body.ntu-enabled #options .fa-solid,
+html body.ntu-enabled #extensionsMenu i,
+html body.ntu-enabled #extensionsMenu .fa-solid {
+    color: var(--ntu-text) !important;
+    opacity: 1 !important;
+}
+
 html body.ntu-enabled .bg_example,
 html body.ntu-enabled .background_select {
     border-color: var(--ntu-border) !important;
