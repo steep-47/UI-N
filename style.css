@@ -958,7 +958,7 @@ html body.ntu-enabled #form_sheld #send_form #send_textarea {
     min-width: 0 !important;
     height: auto !important;
     min-height: 38px !important;
-    max-height: min(17dvh, 94px) !important;
+    max-height: min(34dvh, 280px) !important;
     margin: 0 !important;
     padding: 4px 8px !important;
     display: block !important;
@@ -968,10 +968,10 @@ html body.ntu-enabled #form_sheld #send_form #send_textarea {
     line-height: 1.42 !important;
     resize: none !important;
     overflow-y: auto !important;
-}
-
-html body.ntu-enabled #form_sheld #send_form #send_textarea:not(:focus) {
-    max-height: 42px !important;
+    overscroll-behavior: contain !important;
+    touch-action: pan-y !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-gutter: stable !important;
 }
 
 html body.ntu-enabled #form_sheld #send_form #send_textarea::-webkit-scrollbar {
