@@ -1443,48 +1443,47 @@ html body.ntu-enabled #sheld #chat .mes_reasoning {
     border-radius: 0 !important;
     background: transparent !important;
     color: var(--ntu-muted) !important;
-    font-size: calc(var(--ntu-font-size) * .70) !important;
-    line-height: 1.65 !important;
+    font-size: calc(var(--ntu-font-size) * .80) !important;
+    line-height: 1.72 !important;
     box-shadow: none !important;
 }
 
 /* =========================================================
- * v0.5.35 — clearer reasoning text hierarchy
- * Only changes the color hierarchy of reasoning text.
+ * v0.5.37 — two-tone reasoning typography + readable size
+ * Preserve the two distinct text colors seen in the reference:
+ * normal reasoning copy and emphasized/key phrases.
  * ========================================================= */
 
 :root {
-    --ntu-reasoning-text: #74736e;
-    --ntu-reasoning-strong: #92908a;
+    --ntu-reasoning-text: #7f7d77;
+    --ntu-reasoning-strong: #bdbab3;
 }
 
 body[data-ntu-theme="light"] {
-    --ntu-reasoning-text: #8f8a82;
-    --ntu-reasoning-strong: #706b64;
+    --ntu-reasoning-text: #8b867e;
+    --ntu-reasoning-strong: #555048;
 }
 
 body[data-ntu-theme="dark"] {
-    --ntu-reasoning-text: #74736e;
-    --ntu-reasoning-strong: #92908a;
+    --ntu-reasoning-text: #7f7d77;
+    --ntu-reasoning-strong: #bdbab3;
 }
 
 @media (prefers-color-scheme: light) {
     body[data-ntu-theme="auto"] {
-        --ntu-reasoning-text: #8f8a82;
-        --ntu-reasoning-strong: #706b64;
+        --ntu-reasoning-text: #8b867e;
+        --ntu-reasoning-strong: #555048;
     }
 }
 
 @media (prefers-color-scheme: dark) {
     body[data-ntu-theme="auto"] {
-        --ntu-reasoning-text: #74736e;
-        --ntu-reasoning-strong: #92908a;
+        --ntu-reasoning-text: #7f7d77;
+        --ntu-reasoning-strong: #bdbab3;
     }
 }
 
-/* Force the visible reasoning copy onto its own tonal level. SillyTavern has
-   separate colors for em/q/u inside reasoning, so cover normal text and common
-   emphasis nodes explicitly to keep the block visually distinct from final text. */
+/* Normal reasoning text uses the softer tone. */
 html body.ntu-enabled #sheld #chat .mes_reasoning,
 html body.ntu-enabled #sheld #chat .mes_reasoning p,
 html body.ntu-enabled #sheld #chat .mes_reasoning li,
@@ -1492,10 +1491,16 @@ html body.ntu-enabled #sheld #chat .mes_reasoning span,
 html body.ntu-enabled #sheld #chat .mes_reasoning em,
 html body.ntu-enabled #sheld #chat .mes_reasoning i {
     color: var(--ntu-reasoning-text) !important;
+    font-weight: 400 !important;
 }
 
+/* Strong/key phrases keep their own second color and a moderate heavier weight. */
 html body.ntu-enabled #sheld #chat .mes_reasoning strong,
-html body.ntu-enabled #sheld #chat .mes_reasoning b,
+html body.ntu-enabled #sheld #chat .mes_reasoning b {
+    color: var(--ntu-reasoning-strong) !important;
+    font-weight: 600 !important;
+}
+
 html body.ntu-enabled #sheld #chat .mes_reasoning_header,
 html body.ntu-enabled #sheld #chat .mes_reasoning_header * {
     color: var(--ntu-reasoning-strong) !important;
@@ -1503,35 +1508,5 @@ html body.ntu-enabled #sheld #chat .mes_reasoning_header * {
 
 html body.ntu-enabled #sheld #chat .mes_reasoning {
     border-left-color: color-mix(in srgb, var(--ntu-reasoning-text) 54%, transparent) !important;
-}
-
-/* =========================================================
- * v0.5.36 — stronger emphasis contrast in light reasoning
- * Dark mode was already readable; only the light-mode emphasis hierarchy
- * needed a larger tonal and weight difference.
- * ========================================================= */
-
-body[data-ntu-theme="light"].ntu-enabled #sheld #chat .mes_reasoning strong,
-body[data-ntu-theme="light"].ntu-enabled #sheld #chat .mes_reasoning b {
-    color: #4f4a43 !important;
-    font-weight: 700 !important;
-}
-
-body[data-ntu-theme="light"].ntu-enabled #sheld #chat .mes_reasoning {
-    --ntu-reasoning-text: #918c84;
-    --ntu-reasoning-strong: #4f4a43;
-}
-
-@media (prefers-color-scheme: light) {
-    body[data-ntu-theme="auto"].ntu-enabled #sheld #chat .mes_reasoning strong,
-    body[data-ntu-theme="auto"].ntu-enabled #sheld #chat .mes_reasoning b {
-        color: #4f4a43 !important;
-        font-weight: 700 !important;
-    }
-
-    body[data-ntu-theme="auto"].ntu-enabled #sheld #chat .mes_reasoning {
-        --ntu-reasoning-text: #918c84;
-        --ntu-reasoning-strong: #4f4a43;
-    }
 }
 
