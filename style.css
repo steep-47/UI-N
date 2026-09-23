@@ -956,7 +956,7 @@ html body.ntu-enabled #form_sheld #send_form > :has(> #send_textarea) {
 html body.ntu-enabled #form_sheld #send_form #send_textarea {
     width: 100% !important;
     min-width: 0 !important;
-    height: auto !important;
+    height: 38px !important;
     min-height: 38px !important;
     max-height: min(34dvh, 280px) !important;
     margin: 0 !important;
@@ -967,7 +967,7 @@ html body.ntu-enabled #form_sheld #send_form #send_textarea {
     font-size: 15.5px !important;
     line-height: 1.42 !important;
     resize: none !important;
-    overflow-y: auto !important;
+    overflow-y: hidden !important;
     overscroll-behavior: contain !important;
     touch-action: pan-y !important;
     -webkit-overflow-scrolling: touch !important;
