@@ -1480,3 +1480,56 @@ html body.ntu-enabled #world_popup .select2-selection--multiple {
     min-height: 38px !important;
     height: auto !important;
 }
+
+/* =========================================================
+ * v0.5.15 — TauriTavern mobile World Info flex fix
+ * In TauriTavern 2.3.0, #wiTopBlock becomes a column on mobile while
+ * #WIMultiSelector keeps the generic .flex1 { flex:1 }. That makes the
+ * selector grow vertically and creates the large empty row seen above.
+ * Stop that main-axis growth and let the selector size to its contents.
+ * ========================================================= */
+@media screen and (max-width: 1000px) {
+    html body.ntu-enabled #wiTopBlock {
+        align-items: stretch !important;
+    }
+
+    html body.ntu-enabled #WIMultiSelector {
+        flex: 0 0 auto !important;
+        flex-grow: 0 !important;
+        flex-shrink: 0 !important;
+        flex-basis: auto !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        align-self: stretch !important;
+        align-content: flex-start !important;
+    }
+
+    html body.ntu-enabled #WIMultiSelector .range-block-title {
+        flex: 0 0 100% !important;
+    }
+
+    html body.ntu-enabled #WIMultiSelector .range-block-range {
+        flex: 0 0 100% !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        align-self: flex-start !important;
+    }
+
+    html body.ntu-enabled #WIMultiSelector .select2-container {
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+    }
+
+    html body.ntu-enabled #WIMultiSelector .select2-selection--multiple {
+        height: auto !important;
+        min-height: 38px !important;
+        max-height: 25vh !important;
+        align-content: center !important;
+    }
+}
+
