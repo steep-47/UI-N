@@ -1,7 +1,7 @@
 const MODULE_NAME = 'ui_n';
 const ROOT_CLASS = 'ntu-enabled';
 const TYPOGRAPHY_PRESET_VERSION = 2;
-const VERSION = '0.5.41';
+const VERSION = '0.5.42';
 
 const defaults = {
     enabled: true,
@@ -66,15 +66,19 @@ function syncComposerClearance() {
 
 function syncComposerHeight(textarea = document.getElementById('send_textarea')) {
     if (!(textarea instanceof HTMLTextAreaElement) || !document.body.classList.contains(ROOT_CLASS)) return;
-    const viewportHeight = globalThis.visualViewport?.height || globalThis.innerHeight || 720;
-    const maximum = Math.max(96, Math.min(viewportHeight * 0.34, 280));
 
-    /* Android WebView does not consistently honour field-sizing/content or a
-       textarea's intrinsic auto height. Measure scrollHeight explicitly. */
+    const viewportHeight = globalThis.visualViewport?.height || globalThis.innerHeight || 720;
+    const maximum = Math.max(96, Math.min(viewportHeight * 0.32, 220));
+
+    /* One sizing source: content height. Reset first so deletion can shrink the
+       field again, then grow line-by-line until the viewport-safe cap. */
     textarea.style.setProperty('height', 'auto', 'important');
-    const desired = Math.max(38, Math.min(textarea.scrollHeight, maximum));
-    textarea.style.setProperty('height', `${Math.ceil(desired)}px`, 'important');
-    textarea.style.setProperty('overflow-y', textarea.scrollHeight > maximum + 1 ? 'auto' : 'hidden', 'important');
+    const contentHeight = Math.ceil(textarea.scrollHeight);
+    const desired = Math.max(38, Math.min(contentHeight, maximum));
+
+    textarea.style.setProperty('height', `${desired}px`, 'important');
+    textarea.style.setProperty('overflow-y', contentHeight > maximum ? 'auto' : 'hidden', 'important');
+
     requestAnimationFrame(syncComposerClearance);
 }
 
