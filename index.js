@@ -1,7 +1,7 @@
 const MODULE_NAME = 'ui_n';
 const ROOT_CLASS = 'ntu-enabled';
 const TYPOGRAPHY_PRESET_VERSION = 2;
-const VERSION = '0.5.43';
+const VERSION = '0.5.44';
 
 const defaults = {
     enabled: true,
@@ -47,9 +47,14 @@ function syncMessageFrame(frame) {
         if (!style) {
             style = doc.createElement('style');
             style.id = 'ntu-message-frame-canvas';
-            style.textContent = 'html, body { background: transparent !important; }';
             doc.head.append(style);
         }
+        /* A light child canvas inside a dark embedding element can be painted
+           opaque by the browser even when both backgrounds are transparent.
+           Match the actual embedding color scheme, including auto mode. */
+        const scheme = globalThis.getComputedStyle(frame).colorScheme;
+        const canvasCSS = `html { color-scheme: ${scheme} !important; } html, body { background: transparent !important; }`;
+        if (style.textContent !== canvasCSS) style.textContent = canvasCSS;
         styledMessageFrames.add(frame);
     } catch (_) { /* Cross-origin frames remain under their own control. */ }
 }
@@ -281,6 +286,9 @@ function bindComposerBehavior() {
     globalThis.visualViewport?.addEventListener('resize', updateViewport, { passive: true });
     globalThis.visualViewport?.addEventListener('scroll', updateViewport, { passive: true });
     globalThis.addEventListener('resize', updateViewport, { passive: true });
+    globalThis.matchMedia?.('(prefers-color-scheme: light)').addEventListener('change', () => {
+        if (document.body.classList.contains(ROOT_CLASS)) syncMessageFrames();
+    });
 
     /* SillyTavern and some extensions attach swipe handlers above the editor.
        Capture a real vertical drag and scroll the textarea ourselves so long
