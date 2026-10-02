@@ -1005,7 +1005,9 @@ html body.ntu-enabled #form_sheld #send_form #send_textarea::-webkit-scrollbar-t
     border-radius: 999px !important;
 }
 
-html body.ntu-enabled #form_sheld #send_form .menu_button,
+/* Text actions injected by presets retain their own width and wrapping. */
+html body.ntu-enabled #form_sheld #send_form #options_button,
+html body.ntu-enabled #form_sheld #send_form #extensionsMenuButton,
 html body.ntu-enabled #form_sheld #send_form #send_but {
     box-sizing: border-box !important;
     width: 36px !important;
@@ -1469,4 +1471,10 @@ html body.ntu-enabled #sheld #chat .mes_reasoning {
 .extension_block[data-name="UI-N"] .extension_author,
 .extension_block[data-name^="UI-N@"] .extension_author {
     display: none !important;
+}
+
+/* Match only Tavern Helper's message frames, not external embedded pages. */
+html body.ntu-enabled #chat .mes iframe[id^="TH-message--"],
+html body.ntu-enabled #chat .mes iframe[name^="TH-message--"] {
+    background: transparent !important;
 }

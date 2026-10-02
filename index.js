@@ -1,7 +1,7 @@
 const MODULE_NAME = 'ui_n';
 const ROOT_CLASS = 'ntu-enabled';
 const TYPOGRAPHY_PRESET_VERSION = 2;
-const VERSION = '0.5.42';
+const VERSION = '0.5.43';
 
 const defaults = {
     enabled: true,
@@ -25,6 +25,49 @@ let composerResizeObserver = null;
 let revealTimers = [];
 let composerRevealSuppressed = false;
 let quickToggleObserver = null;
+const messageFrameBindings = new WeakSet();
+const styledMessageFrames = new Set();
+
+/* Tavern Helper message frames have their own document canvas. Only reset
+   that canvas; the cards inside keep their own colors, margins and geometry. */
+function syncMessageFrame(frame) {
+    if (!(frame instanceof HTMLIFrameElement)) return;
+    if (!messageFrameBindings.has(frame)) {
+        messageFrameBindings.add(frame);
+        frame.addEventListener('load', () => syncMessageFrame(frame));
+    }
+    try {
+        const doc = frame.contentDocument;
+        if (!doc?.head) return;
+        let style = doc.getElementById('ntu-message-frame-canvas');
+        if (!document.body.classList.contains(ROOT_CLASS)) {
+            style?.remove();
+            return;
+        }
+        if (!style) {
+            style = doc.createElement('style');
+            style.id = 'ntu-message-frame-canvas';
+            style.textContent = 'html, body { background: transparent !important; }';
+            doc.head.append(style);
+        }
+        styledMessageFrames.add(frame);
+    } catch (_) { /* Cross-origin frames remain under their own control. */ }
+}
+
+function syncMessageFrames() {
+    for (const frame of styledMessageFrames) {
+        if (!frame.isConnected) styledMessageFrames.delete(frame);
+    }
+    document.querySelectorAll('#chat .mes iframe[id^="TH-message--"], #chat .mes iframe[name^="TH-message--"]')
+        .forEach(syncMessageFrame);
+}
+
+function restoreMessageFrames() {
+    for (const frame of styledMessageFrames) {
+        try { frame.contentDocument?.getElementById('ntu-message-frame-canvas')?.remove(); } catch (_) {}
+    }
+    styledMessageFrames.clear();
+}
 
 function revealComposerContext() {
     if (!document.body.classList.contains('ntu-composer-active')) return;
@@ -134,6 +177,7 @@ function applyAppearance() {
     } else {
         body.classList.remove('ntu-chrome-hidden');
         restoreMessages();
+        restoreMessageFrames();
     }
 }
 
@@ -429,8 +473,10 @@ function restoreMessages() {
 }
 
 function refreshMessages(root = document) {
+    if (!document.body.classList.contains(ROOT_CLASS)) return;
     root.querySelectorAll?.('#chat .mes').forEach(upsertMeta);
     ensureChatBuffer();
+    syncMessageFrames();
 }
 
 function observeChat() {
@@ -438,6 +484,7 @@ function observeChat() {
     const chat = document.getElementById('chat');
     if (!chat) return;
     observer = new MutationObserver((mutations) => {
+        if (!document.body.classList.contains(ROOT_CLASS)) return;
         for (const mutation of mutations) {
             const message = mutation.target instanceof Element ? mutation.target.closest('.mes') : null;
             if (message) upsertMeta(message);
@@ -447,6 +494,7 @@ function observeChat() {
                 refreshMessages(node);
             });
         }
+        syncMessageFrames();
     });
     observer.observe(chat, { childList: true, subtree: true, characterData: true });
     refreshMessages();
@@ -663,6 +711,7 @@ export function onDisable() {
     quickToggleObserver?.disconnect();
     quickToggleObserver = null;
     restoreMessages();
+    restoreMessageFrames();
     restoreComposerLayout();
     document.getElementById('ntu_chat_buffer')?.remove();
     document.getElementById('ntu_quick_toggle')?.remove();
