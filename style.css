@@ -1481,3 +1481,28 @@ html body.ntu-enabled #chat .mes iframe[id^="TH-message--"],
 html body.ntu-enabled #chat .mes iframe[name^="TH-message--"] {
     background: transparent !important;
 }
+
+/* Keep script/quick-reply nodes in their original parent for Helper/Vue.
+   Collapse only their shared action bar, without moving or cloning buttons. */
+html body.ntu-enabled #send_form:not(.ntu-script-actions-expanded) .ntu-script-actions {
+    display: none !important;
+}
+
+html body.ntu-enabled #send_form #ntu_script_actions_toggle {
+    order: 2 !important;
+    flex: 0 0 auto !important;
+    width: auto !important;
+    height: 32px !important;
+    margin: 0 5px !important;
+    padding: 4px 8px !important;
+    border: 1px solid var(--ntu-border) !important;
+    border-radius: 8px !important;
+    background: transparent !important;
+    color: var(--ntu-muted) !important;
+    font: 500 13px/1.2 system-ui, sans-serif !important;
+    cursor: pointer;
+}
+
+html body.ntu-enabled #send_form #ntu_script_actions_toggle[hidden] {
+    display: none !important;
+}

@@ -1,7 +1,7 @@
 const MODULE_NAME = 'ui_n';
 const ROOT_CLASS = 'ntu-enabled';
 const TYPOGRAPHY_PRESET_VERSION = 2;
-const VERSION = '0.5.45';
+const VERSION = '0.5.46';
 
 const defaults = {
     enabled: true,
@@ -25,6 +25,53 @@ let composerResizeObserver = null;
 let revealTimers = [];
 let composerRevealSuppressed = false;
 let quickToggleObserver = null;
+let scriptActionsObserver = null;
+let scriptActionsExpanded = false;
+let scriptActionsForm = null;
+
+function syncScriptActions() {
+    const form = document.getElementById('send_form');
+    const tools = form?.querySelector('.ntu-composer-tools');
+    if (!form || !tools || !document.body.classList.contains(ROOT_CLASS)) return;
+    const bars = [...form.querySelectorAll('[id="qr--bar"]')];
+    bars.forEach((bar) => bar.classList.add('ntu-script-actions'));
+    const hasActions = bars.some((bar) => Boolean(bar.textContent.trim()));
+    let toggle = form.querySelector('#ntu_script_actions_toggle');
+    if (!toggle) {
+        toggle = document.createElement('button');
+        toggle.id = 'ntu_script_actions_toggle';
+        toggle.type = 'button';
+        toggle.addEventListener('click', () => {
+            scriptActionsExpanded = !scriptActionsExpanded;
+            syncScriptActions();
+            requestAnimationFrame(syncComposerClearance);
+        });
+        tools.insertBefore(toggle, tools.querySelector('#rightSendForm'));
+    }
+    toggle.hidden = !hasActions;
+    const label = scriptActionsExpanded ? '收起功能 ▴' : '更多功能 ▾';
+    if (toggle.textContent !== label) toggle.textContent = label;
+    toggle.setAttribute('aria-expanded', String(scriptActionsExpanded));
+    form.classList.toggle('ntu-script-actions-expanded', scriptActionsExpanded);
+    if (scriptActionsForm !== form) {
+        scriptActionsObserver?.disconnect();
+        scriptActionsForm = form;
+        scriptActionsObserver = new MutationObserver(() => {
+            syncScriptActions();
+            requestAnimationFrame(syncComposerClearance);
+        });
+        scriptActionsObserver.observe(form, { childList: true, subtree: true, characterData: true });
+    }
+}
+
+function restoreScriptActions() {
+    scriptActionsObserver?.disconnect();
+    scriptActionsObserver = null;
+    scriptActionsForm = null;
+    document.getElementById('ntu_script_actions_toggle')?.remove();
+    document.querySelectorAll('.ntu-script-actions').forEach((bar) => bar.classList.remove('ntu-script-actions'));
+    document.getElementById('send_form')?.classList.remove('ntu-script-actions-expanded');
+}
 const messageFrameBindings = new WeakSet();
 const styledMessageFrames = new Set();
 
@@ -178,11 +225,13 @@ function applyAppearance() {
     if (theme) theme.value = value.theme;
 
     if (value.enabled) {
+        syncScriptActions();
         setTimeout(() => refreshMessages(), 0);
     } else {
         body.classList.remove('ntu-chrome-hidden');
         restoreMessages();
         restoreMessageFrames();
+        restoreScriptActions();
     }
 }
 
@@ -335,7 +384,10 @@ function bindComposerBehavior() {
 }
 
 function ensureComposerLayout() {
-    if (composerLayout?.shell?.isConnected) return;
+    if (composerLayout?.shell?.isConnected) {
+        syncScriptActions();
+        return;
+    }
     composerLayout = null;
 
     const form = document.getElementById('send_form');
@@ -364,6 +416,7 @@ function ensureComposerLayout() {
     shell.append(textSlot, tools);
     form.prepend(shell);
     composerLayout = { shell, moves };
+    syncScriptActions();
     composerResizeObserver?.disconnect();
     composerResizeObserver = new ResizeObserver(syncComposerClearance);
     composerResizeObserver.observe(form);
@@ -374,6 +427,7 @@ function ensureComposerLayout() {
 }
 
 function restoreComposerLayout() {
+    restoreScriptActions();
     if (!composerLayout) return;
     composerResizeObserver?.disconnect();
     composerResizeObserver = null;
