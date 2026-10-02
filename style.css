@@ -726,7 +726,10 @@ html body.ntu-enabled .custom_button {
     background-color: var(--ntu-panel) !important;
 }
 
-html body.ntu-enabled button:hover,
+/* Do not paint every third-party button on hover: floating transparent
+   character buttons also enter this state during touch interactions. */
+html body.ntu-enabled .drawer-content button:hover,
+html body.ntu-enabled .popup-content button:hover,
 html body.ntu-enabled .menu_button:hover,
 html body.ntu-enabled .custom_button:hover,
 html body.ntu-enabled .list-group-item:hover,
