@@ -14,6 +14,9 @@
     --ntu-muted: #83817b;
     --ntu-faint: #50514d;
     --ntu-accent: #a9b2a6;
+    --ntu-quote: #baa7ed;
+    --ntu-emphasis: #91b9bd;
+    --ntu-underline: #a5c9b8;
     --ntu-border: #3a3b37;
     --ntu-shadow: rgba(0, 0, 0, .28);
     --ntu-menu-text: #aaa7a0;
@@ -37,6 +40,9 @@ body[data-ntu-theme="light"] {
     --ntu-muted: #858078;
     --ntu-faint: #c9c2b6;
     --ntu-accent: #6e786b;
+    --ntu-quote: #70529d;
+    --ntu-emphasis: #416b76;
+    --ntu-underline: #416c57;
     --ntu-border: #d1cabe;
     --ntu-shadow: rgba(70, 62, 50, .13);
     --ntu-menu-text: #625e57;
@@ -55,6 +61,9 @@ body[data-ntu-theme="dark"] {
     --ntu-muted: #83817b;
     --ntu-faint: #50514d;
     --ntu-accent: #a9b2a6;
+    --ntu-quote: #baa7ed;
+    --ntu-emphasis: #91b9bd;
+    --ntu-underline: #a5c9b8;
     --ntu-border: #3a3b37;
     --ntu-shadow: rgba(0, 0, 0, .28);
     --ntu-menu-text: #aaa7a0;
@@ -72,6 +81,9 @@ body[data-ntu-theme="dark"] {
         --ntu-muted: #858078;
         --ntu-faint: #c9c2b6;
         --ntu-accent: #6e786b;
+        --ntu-quote: #70529d;
+        --ntu-emphasis: #416b76;
+        --ntu-underline: #416c57;
         --ntu-border: #d1cabe;
         --ntu-shadow: rgba(70, 62, 50, .13);
         --ntu-menu-text: #625e57;
@@ -92,6 +104,9 @@ body[data-ntu-theme="dark"] {
         --ntu-muted: #83817b;
         --ntu-faint: #50514d;
         --ntu-accent: #a9b2a6;
+        --ntu-quote: #baa7ed;
+        --ntu-emphasis: #91b9bd;
+        --ntu-underline: #a5c9b8;
         --ntu-border: #3a3b37;
         --ntu-shadow: rgba(0, 0, 0, .28);
         --ntu-menu-text: #aaa7a0;
@@ -422,9 +437,9 @@ html body.ntu-enabled #extensionsMenu #ntu_quick_toggle .ntu-theme-toggle-icon {
 html body.ntu-enabled {
     color-scheme: dark;
     --SmartThemeBodyColor: var(--ntu-strong);
-    --SmartThemeEmColor: var(--ntu-muted);
-    --SmartThemeUnderlineColor: var(--ntu-accent);
-    --SmartThemeQuoteColor: var(--ntu-accent);
+    --SmartThemeEmColor: var(--ntu-emphasis);
+    --SmartThemeUnderlineColor: var(--ntu-underline);
+    --SmartThemeQuoteColor: var(--ntu-quote);
     --SmartThemeBlurTintColor: var(--ntu-bg);
     --SmartThemeChatTintColor: var(--ntu-bg);
     --SmartThemeUserMesBlurTintColor: var(--ntu-panel);
@@ -741,23 +756,14 @@ html body.ntu-enabled .group_select:hover {
 
 html body.ntu-enabled a,
 html body.ntu-enabled .link,
-html body.ntu-enabled .active,
-html body.ntu-enabled .selected {
+html body.ntu-enabled .menu_button.active,
+html body.ntu-enabled .menu_button.selected,
+html body.ntu-enabled .list-group-item.active {
     color: var(--ntu-accent) !important;
 }
 
-html body.ntu-enabled table,
-html body.ntu-enabled th,
-html body.ntu-enabled td {
-    background-color: transparent !important;
-    color: var(--ntu-text) !important;
-    border-color: var(--ntu-border) !important;
-}
-
-html body.ntu-enabled th {
-    background-color: var(--ntu-panel) !important;
-    color: var(--ntu-strong) !important;
-}
+/* Table cells carry extension-owned update, insert, delete and error states.
+   Inherit the theme's text variables without forcing cell fills or borders. */
 
 html body.ntu-enabled hr,
 html body.ntu-enabled .separator,
