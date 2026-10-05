@@ -14,9 +14,9 @@
     --ntu-muted: #83817b;
     --ntu-faint: #50514d;
     --ntu-accent: #a9b2a6;
-    --ntu-quote: #baa7ed;
-    --ntu-emphasis: #91b9bd;
-    --ntu-underline: #a5c9b8;
+    --ntu-quote: #a69ab8;
+    --ntu-emphasis: #92a4a3;
+    --ntu-underline: #9ca992;
     --ntu-border: #3a3b37;
     --ntu-shadow: rgba(0, 0, 0, .28);
     --ntu-menu-text: #aaa7a0;
@@ -61,9 +61,9 @@ body[data-ntu-theme="dark"] {
     --ntu-muted: #83817b;
     --ntu-faint: #50514d;
     --ntu-accent: #a9b2a6;
-    --ntu-quote: #baa7ed;
-    --ntu-emphasis: #91b9bd;
-    --ntu-underline: #a5c9b8;
+    --ntu-quote: #a69ab8;
+    --ntu-emphasis: #92a4a3;
+    --ntu-underline: #9ca992;
     --ntu-border: #3a3b37;
     --ntu-shadow: rgba(0, 0, 0, .28);
     --ntu-menu-text: #aaa7a0;
@@ -104,9 +104,9 @@ body[data-ntu-theme="dark"] {
         --ntu-muted: #83817b;
         --ntu-faint: #50514d;
         --ntu-accent: #a9b2a6;
-        --ntu-quote: #baa7ed;
-        --ntu-emphasis: #91b9bd;
-        --ntu-underline: #a5c9b8;
+        --ntu-quote: #a69ab8;
+        --ntu-emphasis: #92a4a3;
+        --ntu-underline: #9ca992;
         --ntu-border: #3a3b37;
         --ntu-shadow: rgba(0, 0, 0, .28);
         --ntu-menu-text: #aaa7a0;
@@ -762,8 +762,18 @@ html body.ntu-enabled .list-group-item.active {
     color: var(--ntu-accent) !important;
 }
 
-/* Table cells carry extension-owned update, insert, delete and error states.
-   Inherit the theme's text variables without forcing cell fills or borders. */
+/* Theme table typography and grid lines without resetting state fills.
+   Error cells retain their functional foreground and border treatment. */
+html body.ntu-enabled table,
+html body.ntu-enabled th:not(.error-item):not(.selected):not(.active),
+html body.ntu-enabled td:not(.error-item):not(.selected):not(.active) {
+    color: var(--ntu-text) !important;
+    border-color: var(--ntu-border) !important;
+}
+
+html body.ntu-enabled th:not(.error-item):not(.selected):not(.active) {
+    color: var(--ntu-strong) !important;
+}
 
 html body.ntu-enabled hr,
 html body.ntu-enabled .separator,
