@@ -1,7 +1,7 @@
 const MODULE_NAME = 'ui_n';
 const ROOT_CLASS = 'ntu-enabled';
 const TYPOGRAPHY_PRESET_VERSION = 2;
-const VERSION = '0.5.48';
+const VERSION = '0.5.49';
 
 const defaults = {
     enabled: true,

@@ -14,9 +14,9 @@
     --ntu-muted: #83817b;
     --ntu-faint: #50514d;
     --ntu-accent: #a9b2a6;
-    --ntu-quote: #a69ab8;
-    --ntu-emphasis: #92a4a3;
-    --ntu-underline: #9ca992;
+
+
+
     --ntu-border: #3a3b37;
     --ntu-shadow: rgba(0, 0, 0, .28);
     --ntu-menu-text: #aaa7a0;
@@ -40,9 +40,9 @@ body[data-ntu-theme="light"] {
     --ntu-muted: #858078;
     --ntu-faint: #c9c2b6;
     --ntu-accent: #6e786b;
-    --ntu-quote: #70529d;
-    --ntu-emphasis: #416b76;
-    --ntu-underline: #416c57;
+
+
+
     --ntu-border: #d1cabe;
     --ntu-shadow: rgba(70, 62, 50, .13);
     --ntu-menu-text: #625e57;
@@ -61,9 +61,9 @@ body[data-ntu-theme="dark"] {
     --ntu-muted: #83817b;
     --ntu-faint: #50514d;
     --ntu-accent: #a9b2a6;
-    --ntu-quote: #a69ab8;
-    --ntu-emphasis: #92a4a3;
-    --ntu-underline: #9ca992;
+
+
+
     --ntu-border: #3a3b37;
     --ntu-shadow: rgba(0, 0, 0, .28);
     --ntu-menu-text: #aaa7a0;
@@ -81,9 +81,9 @@ body[data-ntu-theme="dark"] {
         --ntu-muted: #858078;
         --ntu-faint: #c9c2b6;
         --ntu-accent: #6e786b;
-        --ntu-quote: #70529d;
-        --ntu-emphasis: #416b76;
-        --ntu-underline: #416c57;
+
+
+
         --ntu-border: #d1cabe;
         --ntu-shadow: rgba(70, 62, 50, .13);
         --ntu-menu-text: #625e57;
@@ -104,9 +104,9 @@ body[data-ntu-theme="dark"] {
         --ntu-muted: #83817b;
         --ntu-faint: #50514d;
         --ntu-accent: #a9b2a6;
-        --ntu-quote: #a69ab8;
-        --ntu-emphasis: #92a4a3;
-        --ntu-underline: #9ca992;
+
+
+
         --ntu-border: #3a3b37;
         --ntu-shadow: rgba(0, 0, 0, .28);
         --ntu-menu-text: #aaa7a0;
@@ -212,7 +212,7 @@ body.ntu-enabled #chat .mes_block {
 body.ntu-enabled #chat .mes_text {
     padding: 0 !important;
     margin: 0 !important;
-    color: var(--ntu-text) !important;
+    color: var(--SmartThemeBodyColor) !important;
     font-family: "Source Han Sans SC", "Noto Sans CJK SC", "Noto Sans SC", "Microsoft YaHei", "PingFang SC", sans-serif !important;
     font-size: var(--ntu-font-size) !important;
     font-weight: 400 !important;
@@ -436,10 +436,6 @@ html body.ntu-enabled #extensionsMenu #ntu_quick_toggle .ntu-theme-toggle-icon {
 /* 完整界面主题：聊天之外的酒馆区域统一使用 UI-N 日间/夜间色板。 */
 html body.ntu-enabled {
     color-scheme: dark;
-    --SmartThemeBodyColor: var(--ntu-strong);
-    --SmartThemeEmColor: var(--ntu-emphasis);
-    --SmartThemeUnderlineColor: var(--ntu-underline);
-    --SmartThemeQuoteColor: var(--ntu-quote);
     --SmartThemeBlurTintColor: var(--ntu-bg);
     --SmartThemeChatTintColor: var(--ntu-bg);
     --SmartThemeUserMesBlurTintColor: var(--ntu-panel);
@@ -762,17 +758,22 @@ html body.ntu-enabled .list-group-item.active {
     color: var(--ntu-accent) !important;
 }
 
-/* Theme table typography and grid lines without resetting state fills.
-   Error cells retain their functional foreground and border treatment. */
-html body.ntu-enabled table,
-html body.ntu-enabled th:not(.error-item):not(.selected):not(.active),
-html body.ntu-enabled td:not(.error-item):not(.selected):not(.active) {
-    color: var(--ntu-text) !important;
-    border-color: var(--ntu-border) !important;
+/* Soften source colors as a rendered layer; never replace semantic hues.
+   Tables within messages are already filtered by the message ancestor. */
+html body.ntu-enabled {
+    --ntu-content-filter: brightness(.82) saturate(.65);
 }
-
-html body.ntu-enabled th:not(.error-item):not(.selected):not(.active) {
-    color: var(--ntu-strong) !important;
+html body.ntu-enabled[data-ntu-theme="light"] {
+    --ntu-content-filter: saturate(.8);
+}
+@media (prefers-color-scheme: light) {
+    html body.ntu-enabled[data-ntu-theme="auto"] {
+        --ntu-content-filter: saturate(.8);
+    }
+}
+html body.ntu-enabled #chat .mes_text,
+html body.ntu-enabled table:not(.mes_text table):not(table table) {
+    filter: var(--ntu-content-filter);
 }
 
 html body.ntu-enabled hr,
