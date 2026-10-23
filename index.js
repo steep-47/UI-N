@@ -1,7 +1,7 @@
 const MODULE_NAME = 'ui_n';
 const ROOT_CLASS = 'ntu-enabled';
 const TYPOGRAPHY_PRESET_VERSION = 2;
-const VERSION = '0.5.49';
+const VERSION = '0.5.50';
 
 const defaults = {
     enabled: true,
@@ -237,22 +237,14 @@ function applyAppearance() {
 
 function isInteractiveTarget(target) {
     if (!(target instanceof Element)) return true;
-    if (target.closest([
-        'a', 'button', 'input', 'textarea', 'select', 'label',
-        '[contenteditable="true"]', '[role="button"]', '[onclick]', '[tabindex]', '.interactable',
-        '.mes_buttons', '.mes_edit_buttons',
+    return Boolean(target.closest([
+        'a', 'button', 'input', 'textarea', 'select', 'label', 'summary',
+        '[contenteditable="true"]', '[role="button"]', '[role="link"]', '[onclick]',
+        '.interactable', '.custom_interactable', '.menu_button',
+        '.mes_buttons', '.mes_edit_buttons', '.extraMesButtons',
         '.swipe_left', '.swipe_right', '.popup', '#options', '#extensionsMenu',
-    ].join(','))) return true;
-
-    /* Choice cards from extensions are often clickable divs without semantic
-       button markup. Respect their pointer cursor so a choice click never also
-       toggles reader chrome. */
-    let node = target;
-    while (node && node.id !== 'chat') {
-        if (globalThis.getComputedStyle?.(node).cursor === 'pointer') return true;
-        node = node.parentElement;
-    }
-    return false;
+        'iframe', 'audio', 'video',
+    ].join(',')));
 }
 
 function bindReadingTap() {
@@ -260,7 +252,7 @@ function bindReadingTap() {
         if (!settings().enabled || !settings().tapChrome || event.pointerType === 'mouse' && event.button !== 0) return;
         if (!event.target.closest?.('#chat') || isInteractiveTarget(event.target)) return;
         pointerStart = { x: event.clientX, y: event.clientY, time: performance.now(), id: event.pointerId };
-    }, { passive: true });
+    }, { capture: true, passive: true });
 
     document.addEventListener('pointerup', (event) => {
         const start = pointerStart;
@@ -277,9 +269,9 @@ function bindReadingTap() {
         if (chromeHidden) document.body.classList.remove('ntu-composer-active');
         document.body.classList.toggle('ntu-chrome-hidden', chromeHidden);
         requestAnimationFrame(syncComposerClearance);
-    }, { passive: true });
+    }, { capture: true, passive: true });
 
-    document.addEventListener('pointercancel', () => { pointerStart = null; }, { passive: true });
+    document.addEventListener('pointercancel', () => { pointerStart = null; }, { capture: true, passive: true });
 }
 
 function bindComposerBehavior() {
