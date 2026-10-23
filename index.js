@@ -1,7 +1,7 @@
 const MODULE_NAME = 'ui_n';
 const ROOT_CLASS = 'ntu-enabled';
 const TYPOGRAPHY_PRESET_VERSION = 2;
-const VERSION = '0.5.50';
+const VERSION = '0.5.51';
 
 const defaults = {
     enabled: true,
@@ -18,7 +18,6 @@ let observer;
 let initialized = false;
 let chromeHidden = true;
 let pointerStart = null;
-let composerBound = false;
 let composerLayout = null;
 let composerTouch = null;
 let composerResizeObserver = null;
@@ -28,6 +27,10 @@ let quickToggleObserver = null;
 let scriptActionsObserver = null;
 let scriptActionsExpanded = false;
 let scriptActionsForm = null;
+let runtimeCleanups = [];
+let messageRefreshFrame = 0;
+let messageFramesDirty = false;
+const pendingMessageRefresh = new Set();
 
 function syncScriptActions() {
     const form = document.getElementById('send_form');
@@ -72,6 +75,7 @@ function restoreScriptActions() {
     document.querySelectorAll('.ntu-script-actions').forEach((bar) => bar.classList.remove('ntu-script-actions'));
     document.getElementById('send_form')?.classList.remove('ntu-script-actions-expanded');
 }
+
 const messageFrameBindings = new WeakSet();
 const styledMessageFrames = new Set();
 
@@ -177,6 +181,15 @@ function syncComposerHeight(textarea = document.getElementById('send_textarea'))
     requestAnimationFrame(syncComposerClearance);
 }
 
+function restoreComposerSizing() {
+    const textarea = document.getElementById('send_textarea');
+    textarea?.style.removeProperty('height');
+    textarea?.style.removeProperty('overflow-y');
+    document.documentElement.style.removeProperty('--ntu-visual-height');
+    document.documentElement.style.removeProperty('--ntu-keyboard-offset');
+    document.documentElement.style.removeProperty('--ntu-composer-clearance');
+}
+
 function context() {
     return globalThis.SillyTavern?.getContext?.();
 }
@@ -228,10 +241,11 @@ function applyAppearance() {
         syncScriptActions();
         setTimeout(() => refreshMessages(), 0);
     } else {
-        body.classList.remove('ntu-chrome-hidden');
+        body.classList.remove('ntu-chrome-hidden', 'ntu-composer-active');
         restoreMessages();
         restoreMessageFrames();
         restoreScriptActions();
+        restoreComposerSizing();
     }
 }
 
@@ -247,14 +261,29 @@ function isInteractiveTarget(target) {
     ].join(',')));
 }
 
+function listen(target, type, handler, options) {
+    if (!target?.addEventListener) return;
+    target.addEventListener(type, handler, options);
+    runtimeCleanups.push(() => target.removeEventListener(type, handler, options));
+}
+
+function unbindRuntimeEvents() {
+    runtimeCleanups.splice(0).forEach((cleanup) => cleanup());
+    pointerStart = null;
+    composerTouch = null;
+    composerRevealSuppressed = false;
+    revealTimers.forEach(clearTimeout);
+    revealTimers = [];
+}
+
 function bindReadingTap() {
-    document.addEventListener('pointerdown', (event) => {
+    listen(document, 'pointerdown', (event) => {
         if (!settings().enabled || !settings().tapChrome || event.pointerType === 'mouse' && event.button !== 0) return;
         if (!event.target.closest?.('#chat') || isInteractiveTarget(event.target)) return;
         pointerStart = { x: event.clientX, y: event.clientY, time: performance.now(), id: event.pointerId };
     }, { capture: true, passive: true });
 
-    document.addEventListener('pointerup', (event) => {
+    listen(document, 'pointerup', (event) => {
         const start = pointerStart;
         pointerStart = null;
         if (!start || start.id !== event.pointerId || !event.target.closest?.('#chat') || isInteractiveTarget(event.target)) return;
@@ -271,14 +300,12 @@ function bindReadingTap() {
         requestAnimationFrame(syncComposerClearance);
     }, { capture: true, passive: true });
 
-    document.addEventListener('pointercancel', () => { pointerStart = null; }, { capture: true, passive: true });
+    listen(document, 'pointercancel', () => { pointerStart = null; }, { capture: true, passive: true });
 }
 
 function bindComposerBehavior() {
-    if (composerBound) return;
-    composerBound = true;
-
     const updateViewport = () => {
+        if (!document.body.classList.contains(ROOT_CLASS)) return;
         const viewport = globalThis.visualViewport;
         const visualHeight = viewport?.height || globalThis.innerHeight || document.documentElement.clientHeight;
         const covered = viewport
@@ -287,35 +314,38 @@ function bindComposerBehavior() {
         document.documentElement.style.setProperty('--ntu-visual-height', `${Math.round(visualHeight)}px`);
         document.documentElement.style.setProperty('--ntu-keyboard-offset', `${covered}px`);
         requestAnimationFrame(() => {
+            if (!document.body.classList.contains(ROOT_CLASS)) return;
             syncComposerHeight();
             syncComposerClearance();
             scheduleComposerReveal();
         });
     };
 
-    document.addEventListener('input', (event) => {
+    listen(document, 'input', (event) => {
         if (event.target?.id === 'send_textarea') syncComposerHeight(event.target);
     }, true);
 
-    document.addEventListener('change', (event) => {
+    listen(document, 'change', (event) => {
         if (event.target?.id === 'send_textarea') syncComposerHeight(event.target);
     }, true);
 
-    document.addEventListener('focusin', (event) => {
-        if (event.target?.id !== 'send_textarea') return;
+    listen(document, 'focusin', (event) => {
+        if (event.target?.id !== 'send_textarea' || !document.body.classList.contains(ROOT_CLASS)) return;
         document.body.classList.add('ntu-composer-active');
         composerRevealSuppressed = false;
         updateViewport();
         requestAnimationFrame(() => {
+            if (!document.body.classList.contains(ROOT_CLASS)) return;
             syncComposerHeight(event.target);
             syncComposerClearance();
             scheduleComposerReveal();
         });
     });
 
-    document.addEventListener('focusout', (event) => {
+    listen(document, 'focusout', (event) => {
         if (event.target?.id !== 'send_textarea') return;
         setTimeout(() => {
+            if (!document.body.classList.contains(ROOT_CLASS)) return;
             document.body.classList.remove('ntu-composer-active');
             composerRevealSuppressed = false;
             revealTimers.forEach(clearTimeout);
@@ -324,17 +354,18 @@ function bindComposerBehavior() {
         }, 0);
     });
 
-    globalThis.visualViewport?.addEventListener('resize', updateViewport, { passive: true });
-    globalThis.visualViewport?.addEventListener('scroll', updateViewport, { passive: true });
-    globalThis.addEventListener('resize', updateViewport, { passive: true });
-    globalThis.matchMedia?.('(prefers-color-scheme: light)').addEventListener('change', () => {
+    listen(globalThis.visualViewport, 'resize', updateViewport, { passive: true });
+    listen(globalThis.visualViewport, 'scroll', updateViewport, { passive: true });
+    listen(globalThis, 'resize', updateViewport, { passive: true });
+    listen(globalThis.matchMedia?.('(prefers-color-scheme: light)'), 'change', () => {
         if (document.body.classList.contains(ROOT_CLASS)) syncMessageFrames();
     });
 
     /* SillyTavern and some extensions attach swipe handlers above the editor.
        Capture a real vertical drag and scroll the textarea ourselves so long
        drafts remain independently scrollable in Android WebViews. */
-    document.addEventListener('touchstart', (event) => {
+    listen(document, 'touchstart', (event) => {
+        if (!document.body.classList.contains(ROOT_CLASS)) return;
         const textarea = event.target?.closest?.('#send_textarea');
         if (!textarea || textarea.scrollHeight <= textarea.clientHeight + 1 || event.touches.length !== 1) return;
         composerTouch = {
@@ -346,7 +377,7 @@ function bindComposerBehavior() {
         event.stopPropagation();
     }, { capture: true, passive: true });
 
-    document.addEventListener('touchmove', (event) => {
+    listen(document, 'touchmove', (event) => {
         if (!composerTouch || event.touches.length !== 1) return;
         const delta = composerTouch.y - event.touches[0].clientY;
         if (!composerTouch.dragging && Math.abs(delta) < 6) return;
@@ -357,8 +388,8 @@ function bindComposerBehavior() {
     }, { capture: true, passive: false });
 
     const endComposerTouch = () => { composerTouch = null; };
-    document.addEventListener('touchend', endComposerTouch, { capture: true, passive: true });
-    document.addEventListener('touchcancel', endComposerTouch, { capture: true, passive: true });
+    listen(document, 'touchend', endComposerTouch, { capture: true, passive: true });
+    listen(document, 'touchcancel', endComposerTouch, { capture: true, passive: true });
 
     /* Keep chat scrolling native. Capturing touchmove and assigning scrollTop
        removes Android's inertial scrolling and makes the page feel resistant.
@@ -370,9 +401,15 @@ function bindComposerBehavior() {
         revealTimers.forEach(clearTimeout);
         revealTimers = [];
     };
-    document.addEventListener('touchstart', stopComposerReveal, { capture: true, passive: true });
-    document.addEventListener('pointerdown', stopComposerReveal, { capture: true, passive: true });
+    listen(document, 'touchstart', stopComposerReveal, { capture: true, passive: true });
+    listen(document, 'pointerdown', stopComposerReveal, { capture: true, passive: true });
     updateViewport();
+}
+
+function bindRuntimeEvents() {
+    unbindRuntimeEvents();
+    bindReadingTap();
+    bindComposerBehavior();
 }
 
 function ensureComposerLayout() {
@@ -533,22 +570,65 @@ function refreshMessages(root = document) {
     syncMessageFrames();
 }
 
+function cancelScheduledMessageRefresh() {
+    if (messageRefreshFrame) cancelAnimationFrame(messageRefreshFrame);
+    messageRefreshFrame = 0;
+    pendingMessageRefresh.clear();
+    messageFramesDirty = false;
+}
+
+function queueMessageRefresh(message, framesDirty = false) {
+    if (message instanceof HTMLElement) pendingMessageRefresh.add(message);
+    if (framesDirty) messageFramesDirty = true;
+    if (messageRefreshFrame) return;
+    messageRefreshFrame = requestAnimationFrame(() => {
+        messageRefreshFrame = 0;
+        if (!document.body.classList.contains(ROOT_CLASS)) {
+            pendingMessageRefresh.clear();
+            messageFramesDirty = false;
+            return;
+        }
+        for (const item of pendingMessageRefresh) {
+            if (item.isConnected) upsertMeta(item);
+        }
+        pendingMessageRefresh.clear();
+        ensureChatBuffer();
+        if (messageFramesDirty) syncMessageFrames();
+        messageFramesDirty = false;
+    });
+}
+
+function containsMessageFrame(node) {
+    if (!(node instanceof Element)) return false;
+    return node.matches('iframe[id^="TH-message--"], iframe[name^="TH-message--"]')
+        || Boolean(node.querySelector('iframe[id^="TH-message--"], iframe[name^="TH-message--"]'));
+}
+
 function observeChat() {
     observer?.disconnect();
+    cancelScheduledMessageRefresh();
     const chat = document.getElementById('chat');
     if (!chat) return;
     observer = new MutationObserver((mutations) => {
         if (!document.body.classList.contains(ROOT_CLASS)) return;
         for (const mutation of mutations) {
-            const message = mutation.target instanceof Element ? mutation.target.closest('.mes') : null;
-            if (message) upsertMeta(message);
+            let framesDirty = false;
             mutation.addedNodes.forEach((node) => {
                 if (!(node instanceof Element)) return;
-                if (node.matches('.mes')) upsertMeta(node);
-                refreshMessages(node);
+                if (containsMessageFrame(node)) framesDirty = true;
+                if (node.matches('.mes')) pendingMessageRefresh.add(node);
+                node.querySelectorAll?.('.mes').forEach((message) => pendingMessageRefresh.add(message));
             });
+            mutation.removedNodes.forEach((node) => {
+                if (containsMessageFrame(node)) framesDirty = true;
+            });
+
+            const target = mutation.target instanceof Element ? mutation.target : mutation.target.parentElement;
+            const message = target?.closest?.('.mes');
+            const isStreamingBody = Boolean(target?.closest?.('.mes_text'));
+            if (message && !isStreamingBody) pendingMessageRefresh.add(message);
+            queueMessageRefresh(null, framesDirty);
         }
-        syncMessageFrames();
     });
     observer.observe(chat, { childList: true, subtree: true, characterData: true });
     refreshMessages();
@@ -618,7 +698,7 @@ function addQuickToggle() {
 
     item.addEventListener('click', toggle);
     item.addEventListener('keydown', (event) => {
-        if (event.key !== 'Enter' && event.key !== ' ') return;
+        if (event.key !== ' ') return;
         event.preventDefault();
         toggle();
     });
@@ -723,6 +803,8 @@ function update(key, value) {
 
 function init() {
     if (initialized) {
+        addSettingsPanel();
+        bindRuntimeEvents();
         ensureComposerLayout();
         applyAppearance();
         addQuickToggle();
@@ -734,9 +816,8 @@ function init() {
     settings();
     addSettingsPanel();
     addQuickToggle();
+    bindRuntimeEvents();
     ensureComposerLayout();
-    bindReadingTap();
-    bindComposerBehavior();
     applyAppearance();
     observeChat();
 
@@ -746,6 +827,7 @@ function init() {
         [events.CHAT_CHANGED, events.USER_MESSAGE_RENDERED, events.CHARACTER_MESSAGE_RENDERED, events.MESSAGE_EDITED]
             .filter(Boolean)
             .forEach((event) => ctx.eventSource.on(event, () => setTimeout(() => {
+                if (!document.body.classList.contains(ROOT_CLASS)) return;
                 ensureComposerLayout();
                 refreshMessages();
             }, 0)));
@@ -760,13 +842,17 @@ if (document.readyState === 'loading') {
 }
 
 export function onDisable() {
+    unbindRuntimeEvents();
+    cancelScheduledMessageRefresh();
     document.body.classList.remove(ROOT_CLASS, 'ntu-compact-user', 'ntu-chrome-hidden', 'ntu-composer-active');
     observer?.disconnect();
+    observer = null;
     quickToggleObserver?.disconnect();
     quickToggleObserver = null;
     restoreMessages();
     restoreMessageFrames();
     restoreComposerLayout();
+    restoreComposerSizing();
     document.getElementById('ntu_chat_buffer')?.remove();
     document.getElementById('ntu_quick_toggle')?.remove();
 }
